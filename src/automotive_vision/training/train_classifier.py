@@ -33,6 +33,18 @@ def compute_class_weights(labels: list[int], num_classes: int) -> torch.Tensor:
 
 
 @torch.no_grad()
+def collect_logits(model, loader, device) -> tuple[torch.Tensor, torch.Tensor]:
+    """Raw logits + labels for an entire loader, for calibration/temperature-scaling."""
+    model.eval()
+    all_logits, all_labels = [], []
+    for batch in loader:
+        images = batch["image"].to(device)
+        all_logits.append(model(images).cpu())
+        all_labels.append(batch["label"])
+    return torch.cat(all_logits), torch.cat(all_labels)
+
+
+@torch.no_grad()
 def evaluate_model(model, loader, device, class_names) -> tuple[float, dict]:
     model.eval()
     criterion = nn.CrossEntropyLoss()
