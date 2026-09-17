@@ -30,6 +30,7 @@ dependencies = [
     "streamlit>=1.37",
     "grad-cam>=1.5",
     "huggingface-hub>=0.24",
+    "requests>=2.31",
 ]
 
 [project.optional-dependencies]
