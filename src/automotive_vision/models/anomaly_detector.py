@@ -19,6 +19,7 @@ paper's benchmark numbers.
 """
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -83,6 +84,47 @@ class PatchCoreLite:
             dist = torch.cdist(query_patches, chunk)  # (N, chunk_size)
             min_dist = torch.minimum(min_dist, dist.min(dim=1).values)
         return min_dist
+
+    def save(self, path: str | Path) -> None:
+        if self.memory_bank is None:
+            raise RuntimeError("Call fit() before save().")
+        torch.save(
+            {
+                "memory_bank": self.memory_bank.cpu(),
+                "image_size": self.image_size,
+                "memory_bank_size": self.memory_bank_size,
+                "seed": self.seed,
+                "nn_chunk_size": self.nn_chunk_size,
+            },
+            path,
+        )
+
+    @classmethod
+    def load(cls, path: str | Path, device: str = "cpu") -> "PatchCoreLite":
+        checkpoint = torch.load(path, map_location=device, weights_only=False)
+        detector = cls(
+            image_size=checkpoint["image_size"],
+            memory_bank_size=checkpoint["memory_bank_size"],
+            device=device,
+            seed=checkpoint["seed"],
+            nn_chunk_size=checkpoint["nn_chunk_size"],
+        )
+        detector.memory_bank = checkpoint["memory_bank"].to(detector.device)
+        return detector
+
+    @torch.no_grad()
+    def score_image(self, image_tensor: torch.Tensor) -> tuple[float, np.ndarray]:
+        """Scores a single preprocessed image (C, H, W); returns (image_score, pixel_map)."""
+        if self.memory_bank is None:
+            raise RuntimeError("Call fit() or load() before score_image().")
+        batch = image_tensor.unsqueeze(0).to(self.device)
+        patch_map = self.extractor(batch)
+        _, c, h, w = patch_map.shape
+        patches = patch_map.permute(0, 2, 3, 1).reshape(h * w, c)
+        dist = self._nearest_neighbor_distance(patches)
+        score_map = dist.reshape(1, 1, h, w)
+        upsampled = F.interpolate(score_map, size=(self.image_size, self.image_size), mode="bilinear")[0, 0]
+        return float(dist.max().item()), upsampled.cpu().numpy()
 
     @torch.no_grad()
     def score_dataset(self, loader) -> AnomalyScores:

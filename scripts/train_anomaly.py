@@ -106,6 +106,12 @@ def run_patchcore(config, train_records, test_records) -> dict:
         f"PatchCore-lite: image AUROC={metrics['image_auroc']:.4f}, "
         f"pixel AUROC={metrics['pixel_auroc']:.4f}"
     )
+
+    checkpoint_dir = Path("models/checkpoints")
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+    detector.save(checkpoint_dir / "patchcore_memory_bank.pt")
+    logger.info(f"Saved memory bank to {checkpoint_dir / 'patchcore_memory_bank.pt'}")
+
     return metrics, scores
 
 

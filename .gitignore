@@ -46,3 +46,9 @@ reports/metrics/*.csv
 
 # Postgres local data
 pgdata/
+
+# API runtime artifacts
+data/uploads/
+data/heatmaps/
+*.db
+*.db-journal
