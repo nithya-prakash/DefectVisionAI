@@ -1,0 +1,48 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Data & datasets (never commit)
+data/raw/
+data/processed/
+data/mvtec_ad/
+data/*.tar.xz
+data/*.zip
+*.tar.xz
+
+# Model artifacts (top-level checkpoint dir only — not src/automotive_vision/models/)
+*.pt
+*.pth
+*.ckpt
+/models/
+mlruns/
+mlartifacts/
+
+# Reports that are regenerated (keep dirs via .gitkeep, ignore contents)
+reports/figures/*.png
+reports/metrics/*.json
+reports/metrics/*.csv
+!reports/figures/.gitkeep
+!reports/metrics/.gitkeep
+
+# Env / secrets
+.env
+*.env.local
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Postgres local data
+pgdata/

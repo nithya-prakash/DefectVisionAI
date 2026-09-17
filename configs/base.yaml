@@ -1,0 +1,31 @@
+# Shared, dataset-level configuration used by every script.
+seed: 42
+
+dataset:
+  name: mvtec_ad
+  category: metal_nut
+  # Third-party Hub mirror of the official MVTec AD dataset (see data/README.md for license/provenance).
+  hf_repo_id: MSherbinii/mvtec-ad-metal-nut
+  raw_dir: data/raw/mvtec_ad_metal_nut
+  # Path to the category folder inside the mirror once downloaded.
+  category_dir: data/raw/mvtec_ad_metal_nut/metal_nut
+  processed_dir: data/processed/metal_nut
+  image_size: 224
+  # ImageNet normalization stats, since all backbones are ImageNet-pretrained.
+  normalize_mean: [0.485, 0.456, 0.406]
+  normalize_std: [0.229, 0.224, 0.225]
+
+anomaly_detection:
+  memory_bank_size: 10000
+  nn_chunk_size: 4096
+  batch_size: 16
+  # "mps" on Apple Silicon, "cpu" otherwise. Set explicitly rather than always
+  # trusting torch.backends.mps.is_available(), since MPS has known edge-case bugs
+  # for some ops; override to "cpu" here if results look wrong.
+  device: mps
+
+classical_baseline:
+  feature_image_size: 128
+
+logging:
+  level: INFO
