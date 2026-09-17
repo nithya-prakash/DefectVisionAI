@@ -3,9 +3,17 @@
 # scripts/evaluate.py) for the threshold-sweep data behind whatever value is chosen.
 inference:
   checkpoint_path: models/checkpoints/defect_classifier.pt
+  anomaly_checkpoint_path: models/checkpoints/patchcore_memory_bank.pt
+  # CPU by default for API serving: MPS is tuned for a single interactive process,
+  # not concurrent requests across uvicorn workers. Override for single-process/
+  # notebook use if desired.
+  device: cpu
   # Below this softmax confidence, a prediction is routed to human review instead of
   # being auto-decided.
   confidence_threshold: 0.7
   # Optional secondary gate on normalized entropy (0-1); set to null to disable.
   entropy_threshold: null
+  # Optional gate on the anomaly score (same units as reports/metrics/anomaly_detection.json);
+  # set to null to disable and rely on classifier confidence alone.
+  anomaly_review_threshold: null
   temperature: 1.0  # overwritten by scripts/evaluate.py's fitted value once available

@@ -14,4 +14,4 @@ from automotive_vision.utils.config import load_config
 @lru_cache(maxsize=1)
 def get_predictor() -> Predictor:
     config = load_config("configs/base.yaml", "configs/inference.yaml")
-    return Predictor(config, device="cpu")
+    return Predictor(config, device=config["inference"]["device"])

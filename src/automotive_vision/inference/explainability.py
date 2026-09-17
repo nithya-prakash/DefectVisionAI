@@ -1,5 +1,10 @@
 """Visual explanations: Grad-CAM for the classifier, heatmap overlays for anomaly scores.
 
+Wiring status: `anomaly_heatmap_overlay` is live in the default `Predictor.predict()`
+path (inference/predictor.py) and is what the API's `heatmap_path` field returns.
+`gradcam_overlay` is implemented and unit-testable but not currently called from the
+API -- it's available for offline/notebook use, not part of the default response.
+
 Limitation (stated here and in the README, not just implied): Grad-CAM highlights
 image regions that most influenced the *logit* for the predicted class. It is a
 correlational visualization of the network's gradients, not a causal proof that those
@@ -21,14 +26,17 @@ def gradcam_overlay(
     model: torch.nn.Module,
     image_tensor: torch.Tensor,
     target_layer,
-    predicted_class: int,
     mean: list[float],
     std: list[float],
 ) -> np.ndarray:
     """Returns an RGB uint8 array (H, W, 3) with the Grad-CAM heatmap overlaid on the
-    denormalized input image."""
+    denormalized input image. Explains the model's own top prediction (no explicit
+    target class is passed to GradCAM, so it defaults to the highest-scoring one)."""
     cam = GradCAM(model=model, target_layers=[target_layer])
-    grayscale_cam = cam(input_tensor=image_tensor.unsqueeze(0))[0]
+    # targets=None: the installed pytorch-grad-cam version requires this argument
+    # explicitly (it has no default), but None still means "use the model's own
+    # top prediction," which is the intended behavior here.
+    grayscale_cam = cam(input_tensor=image_tensor.unsqueeze(0), targets=None)[0]
 
     rgb_image = denormalize(image_tensor, mean, std).permute(1, 2, 0).cpu().numpy()
     overlay = show_cam_on_image(rgb_image, grayscale_cam, use_rgb=True)

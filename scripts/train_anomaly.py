@@ -20,7 +20,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-import torch
 from sklearn.metrics import roc_curve
 from torch.utils.data import DataLoader
 
@@ -39,17 +38,11 @@ from automotive_vision.training.evaluate import (
     pixel_level_anomaly_metrics,
 )
 from automotive_vision.utils.config import load_config
+from automotive_vision.utils.device import resolve_device
 from automotive_vision.utils.logging import get_logger
 from automotive_vision.utils.seed import set_seed
 
 logger = get_logger(__name__)
-
-
-def resolve_device(requested: str) -> str:
-    if requested == "mps" and not torch.backends.mps.is_available():
-        logger.warning("MPS requested but not available; falling back to cpu.")
-        return "cpu"
-    return requested
 
 
 def run_classical_baseline(train_records, test_records, feature_image_size: int) -> dict:

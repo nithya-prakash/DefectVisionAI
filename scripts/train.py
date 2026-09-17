@@ -34,17 +34,11 @@ from automotive_vision.training.train_classifier import (
     train_classifier,
 )
 from automotive_vision.utils.config import load_config
+from automotive_vision.utils.device import resolve_device
 from automotive_vision.utils.logging import get_logger
 from automotive_vision.utils.seed import set_seed
 
 logger = get_logger(__name__)
-
-
-def resolve_device(requested: str) -> str:
-    if requested == "mps" and not torch.backends.mps.is_available():
-        logger.warning("MPS requested but not available; falling back to cpu.")
-        return "cpu"
-    return requested
 
 
 def main() -> None:

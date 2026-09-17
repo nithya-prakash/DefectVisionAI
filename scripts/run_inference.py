@@ -28,7 +28,7 @@ def main() -> None:
     args = parser.parse_args()
 
     config = load_config(args.config, args.inference_config)
-    predictor = Predictor(config, device="cpu")
+    predictor = Predictor(config, device=config["inference"]["device"])
 
     image_bytes = Path(args.image).read_bytes()
     result = predictor.predict(image_bytes, save_heatmap=not args.no_heatmap)

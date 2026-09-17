@@ -37,7 +37,7 @@ def stratified_initial_sample(labels: np.ndarray, n_initial: int, rng: np.random
     present in `labels` gets at least one labeled example."""
     classes = np.unique(labels)
     per_class = max(1, n_initial // len(classes))
-    selected = []
+    selected: list[int] = []
     for c in classes:
         class_indices = np.where(labels == c)[0]
         n = min(per_class, len(class_indices))

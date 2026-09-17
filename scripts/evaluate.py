@@ -37,16 +37,11 @@ from automotive_vision.training.calibration import (
 )
 from automotive_vision.training.train_classifier import collect_logits
 from automotive_vision.utils.config import load_config
+from automotive_vision.utils.device import resolve_device
 from automotive_vision.utils.logging import get_logger
 from automotive_vision.utils.seed import set_seed
 
 logger = get_logger(__name__)
-
-
-def resolve_device(requested: str) -> str:
-    if requested == "mps" and not torch.backends.mps.is_available():
-        return "cpu"
-    return requested
 
 
 def confidences_and_correctness(logits: torch.Tensor, labels: torch.Tensor, temperature: float = 1.0):

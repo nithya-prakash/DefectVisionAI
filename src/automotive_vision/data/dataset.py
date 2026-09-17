@@ -96,7 +96,7 @@ class AnomalyDetectionDataset(Dataset):
 
         if record.mask_path is not None:
             mask = Image.open(record.mask_path).convert("L").resize(
-                (self.mask_size, self.mask_size), Image.NEAREST
+                (self.mask_size, self.mask_size), Image.Resampling.NEAREST
             )
             mask_tensor = torch.from_numpy((np.array(mask) > 127).astype(np.float32))
         else:

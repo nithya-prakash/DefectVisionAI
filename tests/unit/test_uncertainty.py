@@ -1,6 +1,8 @@
 import numpy as np
+import torch
+from torch import nn
 
-from automotive_vision.models.uncertainty import softmax_uncertainty
+from automotive_vision.models.uncertainty import mc_dropout_predict, softmax_uncertainty
 
 CLASS_NAMES = ["bent", "color", "flip", "good", "scratch"]
 
@@ -36,3 +38,17 @@ def test_confidence_threshold_controls_review_flag():
     strict = softmax_uncertainty(logits, CLASS_NAMES, confidence_threshold=0.99)
     assert lenient.needs_review is False
     assert strict.needs_review is True
+
+
+def test_mc_dropout_predict_returns_expected_shapes_and_restores_eval_mode():
+    model = nn.Sequential(nn.Linear(4, 8), nn.Dropout(p=0.5), nn.Linear(8, len(CLASS_NAMES)))
+    model.eval()
+    x = torch.randn(3, 4)
+
+    result = mc_dropout_predict(model, x, n_passes=10)
+
+    assert result["mean_probs"].shape == (3, len(CLASS_NAMES))
+    assert result["predictive_variance"].shape == (3,)
+    assert result["mean_entropy"].shape == (3,)
+    assert np.allclose(result["mean_probs"].sum(axis=1), 1.0, atol=1e-5)
+    assert model.training is False  # restored to the mode it was called in

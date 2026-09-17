@@ -28,8 +28,10 @@ class DefectClassifier(nn.Module):
                     param.requires_grad = False
 
         in_features = backbone.fc.in_features
-        # Dropout before the head doubles as regularization for a ~80-image training
-        # set and as the stochastic component for Monte Carlo dropout at inference.
+        # Dropout before the head regularizes the ~80-image training set, and also
+        # makes this model usable with models.uncertainty.mc_dropout_predict (an
+        # available but not yet wired-in second uncertainty signal -- see README
+        # Future Work). It is NOT active in the default predict() inference path.
         backbone.fc = nn.Sequential(nn.Dropout(p=dropout_p), nn.Linear(in_features, num_classes))
         self.backbone = backbone
 

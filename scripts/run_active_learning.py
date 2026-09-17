@@ -39,16 +39,11 @@ from automotive_vision.data.preprocessing import build_eval_transform
 from automotive_vision.data.splitting import labeled_pool_split
 from automotive_vision.models.embeddings import PatchFeatureExtractor
 from automotive_vision.utils.config import load_config
+from automotive_vision.utils.device import resolve_device
 from automotive_vision.utils.logging import get_logger
 from automotive_vision.utils.seed import set_seed
 
 logger = get_logger(__name__)
-
-
-def resolve_device(requested: str) -> str:
-    if requested == "mps" and not torch.backends.mps.is_available():
-        return "cpu"
-    return requested
 
 
 @torch.no_grad()

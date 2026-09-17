@@ -78,6 +78,8 @@ class PatchCoreLite:
     @torch.no_grad()
     def _nearest_neighbor_distance(self, query_patches: torch.Tensor) -> torch.Tensor:
         """Chunked min-distance search so we never materialize the full (N, M) matrix."""
+        if self.memory_bank is None:
+            raise RuntimeError("Call fit() or load() before scoring.")
         min_dist = torch.full((query_patches.shape[0],), float("inf"), device=self.device)
         for start in range(0, self.memory_bank.shape[0], self.nn_chunk_size):
             chunk = self.memory_bank[start : start + self.nn_chunk_size]

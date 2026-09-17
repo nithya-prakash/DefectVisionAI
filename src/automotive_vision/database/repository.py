@@ -55,15 +55,6 @@ def get_prediction(db: Session, prediction_id: int) -> Prediction | None:
     return db.query(Prediction).filter_by(id=prediction_id).first()
 
 
-def list_pending_reviews(db: Session) -> list[Prediction]:
-    return (
-        db.query(Prediction)
-        .filter(Prediction.needs_review.is_(True))
-        .filter(~Prediction.review.has())
-        .all()
-    )
-
-
 def create_review(db: Session, prediction_id: int, human_label: str, reviewer_status: str) -> Review:
     review = Review(prediction_id=prediction_id, human_label=human_label, reviewer_status=reviewer_status)
     db.add(review)

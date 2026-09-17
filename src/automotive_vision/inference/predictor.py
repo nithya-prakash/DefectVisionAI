@@ -5,6 +5,7 @@ bank once at process startup, and exposes a single predict() call used by both t
 FastAPI service and scripts/run_inference.py.
 """
 
+import hashlib
 import io
 from pathlib import Path
 
@@ -53,7 +54,7 @@ class Predictor:
         self.model.eval()
         self.model_version = "defect_classifier-v1"
 
-        memory_bank_path = Path("models/checkpoints/patchcore_memory_bank.pt")
+        memory_bank_path = Path(self.inference_cfg["anomaly_checkpoint_path"])
         self.anomaly_detector = None
         if memory_bank_path.exists():
             self.anomaly_detector = PatchCoreLite.load(memory_bank_path, device=device)
@@ -81,8 +82,12 @@ class Predictor:
                 overlay = anomaly_heatmap_overlay(
                     image_tensor, pixel_map, self.dataset_cfg["normalize_mean"], self.dataset_cfg["normalize_std"]
                 )
+                # sha256 (not Python's built-in hash(), which is randomly seeded per
+                # process for bytes/str) so identical uploads get the same filename
+                # deterministically across restarts, not just within one process.
+                content_hash = hashlib.sha256(image_bytes).hexdigest()[:16]
                 heatmap_path = save_overlay(
-                    overlay, self.heatmap_dir / f"anomaly_{abs(hash(image_bytes))}.png"
+                    overlay, self.heatmap_dir / f"anomaly_{content_hash}.png"
                 )
 
         needs_review = decide_needs_review(
