@@ -1,6 +1,9 @@
 import numpy as np
 
-from automotive_vision.training.calibration import expected_calibration_error, reliability_diagram_data
+from automotive_vision.training.calibration import (
+    expected_calibration_error,
+    reliability_diagram_data,
+)
 
 
 def test_perfectly_calibrated_predictions_have_near_zero_ece():

@@ -63,7 +63,7 @@ class PatchCoreLite:
         for batch in normal_loader:
             images = batch["image"].to(self.device)
             patch_map = self.extractor(images)  # (B, C, H, W)
-            b, c, h, w = patch_map.shape
+            _, c, h, _ = patch_map.shape
             self.patch_grid_size = h
             patches = patch_map.permute(0, 2, 3, 1).reshape(-1, c)  # (B*H*W, C)
             all_patches.append(patches.cpu())

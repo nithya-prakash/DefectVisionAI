@@ -7,7 +7,7 @@ unless there's a compelling reason" guidance.
 
 import datetime as dt
 
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Boolean, JSON
+from sqlalchemy import JSON, Boolean, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -16,7 +16,7 @@ class Base(DeclarativeBase):
 
 
 def utcnow() -> dt.datetime:
-    return dt.datetime.now(dt.timezone.utc)
+    return dt.datetime.now(dt.UTC)
 
 
 class Image(Base):

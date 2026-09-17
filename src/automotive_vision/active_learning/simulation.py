@@ -90,7 +90,7 @@ def run_simulation(
         macro_f1 = f1_score(test_labels, test_preds, average="macro", zero_division=0)
         accuracy = accuracy_score(test_labels, test_preds)
 
-        result.n_labeled.append(int(len(labeled_indices)))
+        result.n_labeled.append(len(labeled_indices))
         result.labeled_fraction.append(float(len(labeled_indices) / n_pool))
         result.macro_f1.append(float(macro_f1))
         result.accuracy.append(float(accuracy))

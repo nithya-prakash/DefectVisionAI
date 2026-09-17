@@ -3,7 +3,10 @@ import numpy as np
 from automotive_vision.active_learning.acquisition import RandomAcquisition, min_max_normalize
 from automotive_vision.active_learning.diversity_sampling import DiversityAcquisition
 from automotive_vision.active_learning.hybrid_sampling import HybridAcquisition
-from automotive_vision.active_learning.uncertainty_sampling import UncertaintyAcquisition, predictive_entropy
+from automotive_vision.active_learning.uncertainty_sampling import (
+    UncertaintyAcquisition,
+    predictive_entropy,
+)
 
 
 def test_min_max_normalize_maps_to_unit_range():

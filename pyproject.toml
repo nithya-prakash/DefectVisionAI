@@ -59,3 +59,7 @@ pythonpath = ["src"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+
+[tool.ruff.lint.per-file-ignores]
+# B008: FastAPI's Depends() is idiomatically used as an argument default -- not a bug.
+"src/automotive_vision/api/routes.py" = ["B008"]

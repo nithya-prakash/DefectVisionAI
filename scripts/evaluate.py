@@ -26,19 +26,19 @@ from torch.utils.data import DataLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from automotive_vision.data.dataset import ClassificationDataset, scan_mvtec_category  # noqa: E402
-from automotive_vision.data.preprocessing import build_eval_transform  # noqa: E402
-from automotive_vision.data.splitting import labeled_pool_split, stratified_split  # noqa: E402
-from automotive_vision.models.classifier import DefectClassifier  # noqa: E402
-from automotive_vision.training.calibration import (  # noqa: E402
+from automotive_vision.data.dataset import ClassificationDataset, scan_mvtec_category
+from automotive_vision.data.preprocessing import build_eval_transform
+from automotive_vision.data.splitting import labeled_pool_split, stratified_split
+from automotive_vision.models.classifier import DefectClassifier
+from automotive_vision.training.calibration import (
     expected_calibration_error,
     fit_temperature,
     reliability_diagram_data,
 )
-from automotive_vision.training.train_classifier import collect_logits  # noqa: E402
-from automotive_vision.utils.config import load_config  # noqa: E402
-from automotive_vision.utils.logging import get_logger  # noqa: E402
-from automotive_vision.utils.seed import set_seed  # noqa: E402
+from automotive_vision.training.train_classifier import collect_logits
+from automotive_vision.utils.config import load_config
+from automotive_vision.utils.logging import get_logger
+from automotive_vision.utils.seed import set_seed
 
 logger = get_logger(__name__)
 

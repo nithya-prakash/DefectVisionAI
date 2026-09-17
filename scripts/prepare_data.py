@@ -17,10 +17,13 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from automotive_vision.data.dataset import scan_mvtec_category  # noqa: E402
-from automotive_vision.data.splitting import anomaly_detection_split, labeled_pool_split  # noqa: E402
-from automotive_vision.utils.config import load_config  # noqa: E402
-from automotive_vision.utils.logging import get_logger  # noqa: E402
+from automotive_vision.data.dataset import scan_mvtec_category
+from automotive_vision.data.splitting import (
+    anomaly_detection_split,
+    labeled_pool_split,
+)
+from automotive_vision.utils.config import load_config
+from automotive_vision.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
@@ -40,7 +43,7 @@ def main() -> None:
     for record in records:
         try:
             Image.open(record.path).verify()
-        except Exception:
+        except Exception:  # noqa: BLE001 -- PIL raises varied exception types for corrupt images
             corrupt.append(record.path)
     if corrupt:
         raise RuntimeError(f"{len(corrupt)} corrupt/unreadable images found: {corrupt[:5]}...")

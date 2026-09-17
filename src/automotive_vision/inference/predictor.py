@@ -14,12 +14,11 @@ from PIL import Image
 from automotive_vision.data.preprocessing import build_eval_transform
 from automotive_vision.inference.explainability import (
     anomaly_heatmap_overlay,
-    gradcam_overlay,
     save_overlay,
 )
 from automotive_vision.inference.postprocessing import decide_needs_review
-from automotive_vision.models.classifier import DefectClassifier
 from automotive_vision.models.anomaly_detector import PatchCoreLite
+from automotive_vision.models.classifier import DefectClassifier
 from automotive_vision.models.uncertainty import softmax_uncertainty
 from automotive_vision.utils.logging import get_logger
 

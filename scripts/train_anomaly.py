@@ -26,18 +26,21 @@ from torch.utils.data import DataLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from automotive_vision.data.dataset import AnomalyDetectionDataset, scan_mvtec_category  # noqa: E402
-from automotive_vision.data.preprocessing import build_eval_transform  # noqa: E402
-from automotive_vision.data.splitting import anomaly_detection_split  # noqa: E402
-from automotive_vision.models.anomaly_detector import PatchCoreLite  # noqa: E402
-from automotive_vision.models.classical_baseline import ClassicalAnomalyBaseline  # noqa: E402
-from automotive_vision.training.evaluate import (  # noqa: E402
+from automotive_vision.data.dataset import (
+    AnomalyDetectionDataset,
+    scan_mvtec_category,
+)
+from automotive_vision.data.preprocessing import build_eval_transform
+from automotive_vision.data.splitting import anomaly_detection_split
+from automotive_vision.models.anomaly_detector import PatchCoreLite
+from automotive_vision.models.classical_baseline import ClassicalAnomalyBaseline
+from automotive_vision.training.evaluate import (
     image_level_anomaly_metrics,
     pixel_level_anomaly_metrics,
 )
-from automotive_vision.utils.config import load_config  # noqa: E402
-from automotive_vision.utils.logging import get_logger  # noqa: E402
-from automotive_vision.utils.seed import set_seed  # noqa: E402
+from automotive_vision.utils.config import load_config
+from automotive_vision.utils.logging import get_logger
+from automotive_vision.utils.seed import set_seed
 
 logger = get_logger(__name__)
 

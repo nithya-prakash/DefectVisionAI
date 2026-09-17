@@ -47,7 +47,7 @@ def image_level_anomaly_metrics(
     auroc_ci = bootstrap_ci(labels, scores, roc_auc_score, n_bootstrap, seed)
     auprc_ci = bootstrap_ci(labels, scores, average_precision_score, n_bootstrap, seed)
     return {
-        "n_samples": int(len(labels)),
+        "n_samples": len(labels),
         "n_anomalous": int(labels.sum()),
         "n_normal": int(len(labels) - labels.sum()),
         "image_auroc": float(auroc),
@@ -62,7 +62,7 @@ def pixel_level_anomaly_metrics(masks: np.ndarray, pixel_maps: np.ndarray) -> di
     y_true = masks.flatten().astype(int)
     y_score = pixel_maps.flatten()
     return {
-        "n_pixels": int(len(y_true)),
+        "n_pixels": len(y_true),
         "n_positive_pixels": int(y_true.sum()),
         "pixel_auroc": float(roc_auc_score(y_true, y_score)),
     }
@@ -82,7 +82,7 @@ def classification_metrics(y_true: np.ndarray, y_pred: np.ndarray, class_names: 
             "support": int(binary_true.sum()),
         }
     return {
-        "n_samples": int(len(y_true)),
+        "n_samples": len(y_true),
         "accuracy": float(accuracy_score(y_true, y_pred)),
         "macro_f1": float(f1_score(y_true, y_pred, average="macro", zero_division=0)),
         "per_class": per_class,

@@ -18,9 +18,9 @@ from huggingface_hub import snapshot_download
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from automotive_vision.data.dataset import scan_mvtec_category  # noqa: E402
-from automotive_vision.utils.config import load_config  # noqa: E402
-from automotive_vision.utils.logging import get_logger  # noqa: E402
+from automotive_vision.data.dataset import scan_mvtec_category
+from automotive_vision.utils.config import load_config
+from automotive_vision.utils.logging import get_logger
 
 logger = get_logger(__name__)
 

@@ -13,8 +13,8 @@ specifically because of the tiny training set — fine-tuning the whole network 
 images invites overfitting.
 """
 
-import torch.nn as nn
 import torchvision.models as tv_models
+from torch import nn
 
 
 class DefectClassifier(nn.Module):
@@ -24,7 +24,7 @@ class DefectClassifier(nn.Module):
 
         if freeze_until_layer4:
             for name, param in backbone.named_parameters():
-                if not (name.startswith("layer4") or name.startswith("fc")):
+                if not name.startswith(("layer4", "fc")):
                     param.requires_grad = False
 
         in_features = backbone.fc.in_features

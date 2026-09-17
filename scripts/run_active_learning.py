@@ -27,18 +27,20 @@ from torch.utils.data import DataLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from automotive_vision.active_learning.acquisition import RandomAcquisition  # noqa: E402
-from automotive_vision.active_learning.diversity_sampling import DiversityAcquisition  # noqa: E402
-from automotive_vision.active_learning.hybrid_sampling import HybridAcquisition  # noqa: E402
-from automotive_vision.active_learning.simulation import run_simulation  # noqa: E402
-from automotive_vision.active_learning.uncertainty_sampling import UncertaintyAcquisition  # noqa: E402
-from automotive_vision.data.dataset import ClassificationDataset, scan_mvtec_category  # noqa: E402
-from automotive_vision.data.preprocessing import build_eval_transform  # noqa: E402
-from automotive_vision.data.splitting import labeled_pool_split  # noqa: E402
-from automotive_vision.models.embeddings import PatchFeatureExtractor  # noqa: E402
-from automotive_vision.utils.config import load_config  # noqa: E402
-from automotive_vision.utils.logging import get_logger  # noqa: E402
-from automotive_vision.utils.seed import set_seed  # noqa: E402
+from automotive_vision.active_learning.acquisition import RandomAcquisition
+from automotive_vision.active_learning.diversity_sampling import DiversityAcquisition
+from automotive_vision.active_learning.hybrid_sampling import HybridAcquisition
+from automotive_vision.active_learning.simulation import run_simulation
+from automotive_vision.active_learning.uncertainty_sampling import (
+    UncertaintyAcquisition,
+)
+from automotive_vision.data.dataset import ClassificationDataset, scan_mvtec_category
+from automotive_vision.data.preprocessing import build_eval_transform
+from automotive_vision.data.splitting import labeled_pool_split
+from automotive_vision.models.embeddings import PatchFeatureExtractor
+from automotive_vision.utils.config import load_config
+from automotive_vision.utils.logging import get_logger
+from automotive_vision.utils.seed import set_seed
 
 logger = get_logger(__name__)
 

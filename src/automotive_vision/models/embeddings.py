@@ -5,9 +5,9 @@ via global-pooled embeddings, by diversity sampling in active learning.
 """
 
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.models as tv_models
+from torch import nn
 
 
 class PatchFeatureExtractor(nn.Module):

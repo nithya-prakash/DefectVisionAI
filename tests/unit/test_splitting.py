@@ -3,7 +3,11 @@ from pathlib import Path
 import pytest
 
 from automotive_vision.data.dataset import ImageRecord
-from automotive_vision.data.splitting import anomaly_detection_split, labeled_pool_split, stratified_split
+from automotive_vision.data.splitting import (
+    anomaly_detection_split,
+    labeled_pool_split,
+    stratified_split,
+)
 
 
 def make_records(n_per_class: int, classes: list[str], official_split: str = "test") -> list[ImageRecord]:
@@ -28,7 +32,7 @@ def test_labeled_pool_split_is_stratified_and_disjoint():
     records = make_records(10, ["good", "bent", "scratch"])
     pool, held_out = labeled_pool_split(records, test_size=0.3, seed=42)
     assert len(pool) + len(held_out) == len(records)
-    assert set(id(r) for r in pool).isdisjoint(set(id(r) for r in held_out))
+    assert {id(r) for r in pool}.isdisjoint({id(r) for r in held_out})
     # Roughly proportional per class in the held-out set (10 * 0.3 = 3 per class).
     held_out_bent = [r for r in held_out if r.defect_type == "bent"]
     assert len(held_out_bent) == 3

@@ -8,7 +8,7 @@ from pathlib import Path
 TEST_DB_PATH = Path(__file__).parent / "test_automotive_vision.db"
 os.environ["DATABASE_URL"] = f"sqlite:///{TEST_DB_PATH}"
 
-import pytest  # noqa: E402
+import pytest
 
 
 @pytest.fixture(scope="session", autouse=True)

@@ -42,8 +42,10 @@ def main() -> None:
             f"| Classical baseline | {fmt(c['image_auroc'])} | {fmt(c['image_auprc'])} | N/A |",
             f"| PatchCore-lite | {fmt(p['image_auroc'])} | {fmt(p['image_auprc'])} | {fmt(p.get('pixel_auroc'))} |",
             "",
-            f"Image AUROC 95% CI (bootstrap): classical [{fmt(c['image_auroc_ci95'][0])}, {fmt(c['image_auroc_ci95'][1])}], "
-            f"PatchCore-lite [{fmt(p['image_auroc_ci95'][0])}, {fmt(p['image_auroc_ci95'][1])}].",
+            (
+                f"Image AUROC 95% CI (bootstrap): classical [{fmt(c['image_auroc_ci95'][0])}, {fmt(c['image_auroc_ci95'][1])}], "
+                f"PatchCore-lite [{fmt(p['image_auroc_ci95'][0])}, {fmt(p['image_auroc_ci95'][1])}]."
+            ),
         ]
     else:
         lines.append("_Not yet run. Run `python scripts/train_anomaly.py`._")

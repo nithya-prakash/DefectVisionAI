@@ -25,14 +25,17 @@ from torch.utils.data import DataLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from automotive_vision.data.dataset import ClassificationDataset, scan_mvtec_category  # noqa: E402
-from automotive_vision.data.augmentation import build_train_transform  # noqa: E402
-from automotive_vision.data.preprocessing import build_eval_transform  # noqa: E402
-from automotive_vision.data.splitting import labeled_pool_split, stratified_split  # noqa: E402
-from automotive_vision.training.train_classifier import evaluate_model, train_classifier  # noqa: E402
-from automotive_vision.utils.config import load_config  # noqa: E402
-from automotive_vision.utils.logging import get_logger  # noqa: E402
-from automotive_vision.utils.seed import set_seed  # noqa: E402
+from automotive_vision.data.augmentation import build_train_transform
+from automotive_vision.data.dataset import ClassificationDataset, scan_mvtec_category
+from automotive_vision.data.preprocessing import build_eval_transform
+from automotive_vision.data.splitting import labeled_pool_split, stratified_split
+from automotive_vision.training.train_classifier import (
+    evaluate_model,
+    train_classifier,
+)
+from automotive_vision.utils.config import load_config
+from automotive_vision.utils.logging import get_logger
+from automotive_vision.utils.seed import set_seed
 
 logger = get_logger(__name__)
 
@@ -90,7 +93,7 @@ def main() -> None:
     )
 
     test_loader = DataLoader(test_ds, batch_size=train_cfg["batch_size"], shuffle=False)
-    test_loss, test_metrics = evaluate_model(model, test_loader, device, class_names)
+    _test_loss, test_metrics = evaluate_model(model, test_loader, device, class_names)
     logger.info(f"Held-out test: accuracy={test_metrics['accuracy']:.4f}, macro-F1={test_metrics['macro_f1']:.4f}")
 
     checkpoint_dir = Path(train_cfg["checkpoint_dir"])
