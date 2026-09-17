@@ -1,0 +1,28 @@
+# Supervised classifier training config.
+training:
+  # Fraction of the 115-image officially-labeled pool held out as a fixed final test
+  # set, untouched by training/validation/active-learning selection.
+  held_out_fraction: 0.30
+  # Of the remaining pool, fraction further held out as a validation set for early
+  # stopping / LR scheduling.
+  val_fraction: 0.20
+
+  batch_size: 8
+  epochs: 40
+  early_stopping_patience: 8
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  freeze_until_layer4: true
+  dropout_p: 0.3
+
+  # LR scheduler: reduce on plateau of val macro-F1.
+  lr_scheduler_factor: 0.5
+  lr_scheduler_patience: 3
+
+  # Class imbalance handling: inverse-frequency class weights in the loss. The labeled
+  # pool here is fairly balanced (~15-25 images/class; see data/README.md), so this
+  # mostly matters once active learning creates unbalanced labeled subsets.
+  use_class_weights: true
+
+  device: mps
+  checkpoint_dir: models/checkpoints

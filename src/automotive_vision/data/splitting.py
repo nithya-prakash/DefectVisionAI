@@ -44,3 +44,13 @@ def labeled_pool_split(
         labeled, test_size=test_size, random_state=seed, stratify=labels
     )
     return pool, held_out
+
+
+def stratified_split(
+    records: list[ImageRecord],
+    test_size: float,
+    seed: int = 42,
+) -> tuple[list[ImageRecord], list[ImageRecord]]:
+    """Generic stratified-by-defect_type split, reused for train/val carving."""
+    labels = [r.defect_type for r in records]
+    return train_test_split(records, test_size=test_size, random_state=seed, stratify=labels)
