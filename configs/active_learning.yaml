@@ -1,0 +1,12 @@
+# Active-learning simulation config. Operates on the same 80-image labeled "pool"
+# used to train the supervised classifier (data/README.md), evaluating each round
+# against the same 35-image held-out test set for direct comparability.
+active_learning:
+  strategies: [random, uncertainty, diversity, hybrid]
+  alpha: 0.5  # hybrid acquisition weight: alpha*uncertainty + (1-alpha)*diversity; not claimed optimal
+  initial_labeled_fraction: 0.2  # ~16 of 80 pool images
+  acquisition_size: 8  # ~10% of pool per round
+  rounds: 8  # 20% -> 100% of pool labeled, in ~10% steps
+  n_repeats: 5  # independent random seeds per strategy, for the confidence band in the plot
+  base_seed: 42
+  device: mps
