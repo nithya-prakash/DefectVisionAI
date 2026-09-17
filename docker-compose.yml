@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: automotive
       POSTGRES_DB: automotive_vision
     ports:
-      - "5432:5432"
+      - "5440:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile.api
     ports:
-      - "8000:8000"
+      - "8020:8000"
     environment:
       DATABASE_URL: postgresql://automotive:automotive@db:5432/automotive_vision
     volumes:
