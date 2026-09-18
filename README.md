@@ -167,7 +167,12 @@ automotive-vision-inspection/
 
 ## Setup
 
+All commands below (and everywhere else in this README) assume you're in the repo
+root (`cd automotive-vision-inspection`) with the virtualenv activated — every script
+resolves its default config/data paths relative to that directory.
+
 ```bash
+git clone <this-repo-url> && cd automotive-vision-inspection
 python3.12 -m venv .venv && source .venv/bin/activate   # Python 3.12 -- PyTorch doesn't support 3.14 yet
 pip install -e ".[dev]"
 python scripts/download_data.py
