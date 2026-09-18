@@ -1,65 +1,83 @@
-# Demo Recording Guide
+# Demo Assets
 
-## Why this is a manual step
+## Status: done
 
-The demo's file upload widget requires a native OS "Choose File" dialog. The
-browser-automation tools available in this environment cannot interact with native
-file pickers (this is a real, documented limitation of remote browser automation, not
-a bug in the demo). Instead, the complete app logic was verified headlessly with
-Streamlit's own test harness (`streamlit.testing.v1.AppTest`), which simulates a real
-file upload and a real call to the running FastAPI backend without needing a browser
-at all -- confirming zero exceptions and correct rendering of every UI branch
-(metrics, heatmap image, human-review warning) on both a normal and a defective real
-MVTec image. What's below are the exact manual steps to capture the visual assets
-that verification can't produce.
+The 3 screenshots and the demo GIF referenced in the README (`docs/images/`) are
+real captures of the running app, not mockups:
 
-## Screenshots to capture manually
+- `01_good_prediction.png` — a real `good` MVTec image run through the live demo:
+  Prediction=`good`, Confidence=`0.85`, Uncertainty=`0.30`, Anomaly score=`4.46`,
+  Human review needed=`No`.
+- `02_defect_prediction.png` — `test/scratch/000.png`, which the classifier
+  genuinely misclassifies as `bent` (Confidence=`0.43`, Uncertainty=`0.82`,
+  Anomaly score=`3.90`), correctly triggering `Human review needed=Yes` and the
+  review-warning banner, with the real anomaly heatmap.
+- `03_api_review.png` — FastAPI's `/docs` Swagger UI executing a real
+  `POST /review` against prediction id 2 and showing the actual 200 response
+  (server-generated `id`, `created_at`, etc. — not hand-written JSON).
+- `demo.gif` — the three screenshots above, assembled into a looping GIF with
+  Pillow (already a project dependency; see the snippet at the bottom of this file
+  if you want to regenerate it after retaking a screenshot).
 
-Save these to `docs/images/`.
+**How these were captured**, since it's worth recording: the demo's file-upload
+widget needs a native OS "Choose File" dialog, which the available browser-automation
+tooling couldn't drive directly. Instead, the target image was fetched in-page via
+`fetch()` from a local static file server and attached to the file input's
+`DataTransfer` programmatically (the same technique browser-testing libraries use to
+simulate uploads), which is functionally identical to a user actually picking that
+file. The rendered result was then captured with `html2canvas` and posted to a small
+local script that wrote the PNG straight to `docs/images/`. Every value shown was
+produced by a real call to the real running FastAPI backend — nothing was hand-edited
+into the images. Separately, the full demo logic (including the review-warning UI
+branch) was also verified headlessly via `streamlit.testing.v1.AppTest` during the
+portfolio audit, with zero exceptions on both a normal and a defective image.
 
-**1. `docs/images/01_good_prediction.png` — a normal part**
+## Regenerating the screenshots
 
-1. Start the API: `uvicorn automotive_vision.api.main:app --reload` (or `docker compose up`)
-2. Start the demo: `API_URL=http://localhost:8000 streamlit run demo/app.py` (use `:8020` if running via Docker)
-3. Upload `data/raw/mvtec_ad_metal_nut/metal_nut/test/good/000.png`
-4. Click "Run inspection"
-5. Screenshot the full result. Expected values (verified during this audit, your run
-   should match exactly since inference is deterministic): Prediction=`good`,
-   Confidence=`0.85`, Uncertainty=`0.30`, Anomaly score=`4.46`, Human review
-   needed=`No`.
+```bash
+# Terminal 1
+uvicorn automotive_vision.api.main:app --port 8020 &
+API_URL=http://localhost:8020 streamlit run demo/app.py --server.port 8511
 
-**2. `docs/images/02_defect_prediction.png` — a defective part with heatmap**
+# Then open http://localhost:8511, upload a real MVTec test image
+# (data/raw/mvtec_ad_metal_nut/metal_nut/test/<type>/*.png), click "Run inspection",
+# and screenshot the result manually (Cmd+Shift+5 on macOS).
+```
 
-1. Upload `data/raw/mvtec_ad_metal_nut/metal_nut/test/bent/000.png`
-2. Click "Run inspection"
-3. Screenshot the full result, including the anomaly heatmap image at the bottom.
-   Expected: Prediction=`bent`, Confidence=`0.87`, Anomaly score=`5.75`, Human review
-   needed=`No` (high-confidence correct classification -- for a case that instead
-   triggers the review warning, use `test/scratch/000.png`, which this audit
-   confirmed gets misclassified as `bent` at confidence `0.43` and correctly flags
-   `Human review needed=Yes` with the warning banner shown).
+## Regenerating demo.gif from updated screenshots
 
-**3. `docs/images/03_api_review.png` — the human-review API workflow**
+```python
+from PIL import Image
 
-1. With the API running, open `http://localhost:8000/docs` (FastAPI's auto-generated
-   Swagger UI) -- or use `curl`/Postman.
-2. Show a `POST /review` call against a prediction ID returned by step 2, and the
-   resulting `GET /predictions/{id}` showing the review attached.
-3. Screenshot the request/response.
+CANVAS_SIZE = (900, 700)
+BG = (14, 17, 23)
 
-## 20-40 second demo recording script
+def fit(path):
+    im = Image.open(path).convert("RGB")
+    im.thumbnail(CANVAS_SIZE, Image.LANCZOS)
+    canvas = Image.new("RGB", CANVAS_SIZE, BG)
+    canvas.paste(im, ((CANVAS_SIZE[0] - im.width) // 2, (CANVAS_SIZE[1] - im.height) // 2))
+    return canvas
+
+frames = [fit(f"docs/images/{n}") for n in
+          ["01_good_prediction.png", "02_defect_prediction.png", "03_api_review.png"]]
+frames[0].save("docs/images/demo.gif", save_all=True, append_images=frames[1:],
+               duration=[2500, 2500, 2500], loop=0)
+```
+
+## Recording a real screen-capture video instead (optional)
+
+If you'd rather have a real screen recording instead of/alongside the GIF:
 
 1. (0-5s) Show the empty demo UI: title, API-reachable banner.
-2. (5-12s) Upload `test/bent/000.png`, click "Run inspection."
-3. (12-20s) Show the prediction/confidence/uncertainty/anomaly-score metrics appearing.
-4. (20-28s) Scroll to the anomaly heatmap image.
-5. (28-35s) Upload `test/scratch/000.png` instead, re-run, and show the "flagged for
-   human review" warning appearing (the misclassification case).
-6. (35-40s) Cut.
+2. (5-12s) Upload `test/good/000.png`, click "Run inspection," show the result.
+3. (12-20s) Upload `test/scratch/000.png` instead, re-run, and show the "flagged for
+   human review" warning appearing (the misclassification case) plus its heatmap.
+4. (20-30s) Switch to `/docs`, execute `POST /review` against that prediction, show
+   the real response.
+5. Cut.
 
-### Recording locally
-
-- **macOS**: `Cmd+Shift+5` opens the built-in screen recorder; select the browser
-  window, click Record.
-- **Convert to GIF** (optional, no new dependency needed if `ffmpeg` is already
-  installed): `ffmpeg -i recording.mov -vf "fps=10,scale=800:-1" demo.gif`
+- **macOS**: `Cmd+Shift+5` opens the built-in screen recorder.
+- **Convert to GIF**: `ffmpeg -i recording.mov -vf "fps=10,scale=900:-1" demo.gif`
+  (only if `ffmpeg` is already installed — not worth adding as a new dependency
+  just for this).
