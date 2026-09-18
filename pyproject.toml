@@ -58,3 +58,16 @@ target-version = "py312"
 [tool.ruff.lint.per-file-ignores]
 # B008: FastAPI's Depends() is idiomatically used as an argument default -- not a bug.
 "src/automotive_vision/api/routes.py" = ["B008"]
+
+[[tool.mypy.overrides]]
+# These third-party libraries ship no inline type markers (py.typed) or stubs package;
+# ignoring missing imports for just these modules (not project-wide) keeps `mypy src`
+# clean without silencing real errors in our own code.
+module = [
+    "yaml",
+    "torchvision.*",
+    "sklearn.*",
+    "scipy.*",
+    "pytorch_grad_cam.*",
+]
+ignore_missing_imports = true
