@@ -6,7 +6,7 @@ Surface-defect inspection prototype for manufactured parts: a PatchCore-style an
 
 ![Demo: upload an image, get a prediction with confidence and an anomaly heatmap, then the human-review API workflow](docs/images/demo.gif)
 
-*Recorded from the local Streamlit demo calling the API: a normal part, a defective part flagged for review, and the review endpoint. Does not show a hosted deployment, authentication, or real production images.*
+*Recorded 2026-10-14 from the local Streamlit demo calling the API with the current policy (temperature 1.457, threshold 0.74): a good part auto-decided (0.87), a scratched part misclassified as `bent` and flagged for review (0.36), then the review submitted in the API docs. Two illustrative images, not a sample; no hosted deployment, authentication or production images.*
 
 ## Results
 

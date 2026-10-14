@@ -1,36 +1,29 @@
 # Demo Assets
 
-## Status: done
+## Status: re-recorded 2026-10-14 under the current policy
 
-The 3 screenshots and the demo GIF referenced in the README (`docs/images/`) are
-real captures of the running app, not mockups:
+The GIF and screenshots in `docs/images/` are real captures of the running demo, re-recorded after the review policy
+changed (temperature 1.4568, confidence threshold 0.74, anomaly gate off; see `configs/inference.yaml`). The earlier
+set (2026-09-18) was recorded with temperature 1.0 and threshold 0.7, so its confidences no longer matched the code.
 
-- `01_good_prediction.png` — a real `good` MVTec image run through the live demo:
-  Prediction=`good`, Confidence=`0.85`, Uncertainty=`0.30`, Anomaly score=`4.46`,
-  Human review needed=`No`.
-- `02_defect_prediction.png` — `test/scratch/000.png`, which the classifier
-  genuinely misclassifies as `bent` (Confidence=`0.43`, Uncertainty=`0.82`,
-  Anomaly score=`3.90`), correctly triggering `Human review needed=Yes` and the
-  review-warning banner, with the real anomaly heatmap.
-- `03_api_review.png` — FastAPI's `/docs` Swagger UI executing a real
-  `POST /review` against prediction id 2 and showing the actual 200 response
-  (server-generated `id`, `created_at`, etc. — not hand-written JSON).
-- `demo.gif` — the three screenshots above, assembled into a looping GIF with
-  Pillow (already a project dependency; see the snippet at the bottom of this file
-  if you want to regenerate it after retaking a screenshot).
+- `01_good_prediction.png`: `test/good/002.png` through the live demo: Prediction `good`, Confidence `0.87`,
+  Uncertainty `0.32`, Anomaly score `4.27`, Human review needed `No`.
+- `02_defect_prediction.png`: `test/scratch/000.png`, which the classifier misclassifies as `bent`
+  (Confidence `0.36`, Uncertainty `0.88`, Anomaly score `3.90`): `Human review needed = Yes`, the review-warning
+  banner and the anomaly heatmap.
+- `03_api_review.png`: the API's `/docs` Swagger UI executing `POST /review` for prediction id 2 (the scratch image,
+  label `scratch`, status `corrected`) with the real 200 response. Prediction id 2 was verified in the database.
+- `demo.gif`: six frames of the same session (demo loaded, good image, its result, scratch image, its result, the review
+  call), assembled with ffmpeg.
 
-**How these were captured**, since it's worth recording: the demo's file-upload
-widget needs a native OS "Choose File" dialog, which the available browser-automation
-tooling couldn't drive directly. Instead, the target image was fetched in-page via
-`fetch()` from a local static file server and attached to the file input's
-`DataTransfer` programmatically (the same technique browser-testing libraries use to
-simulate uploads), which is functionally identical to a user actually picking that
-file. The rendered result was then captured with `html2canvas` and posted to a small
-local script that wrote the PNG straight to `docs/images/`. Every value shown was
-produced by a real call to the real running FastAPI backend — nothing was hand-edited
-into the images. Separately, the full demo logic (including the review-warning UI
-branch) was also verified headlessly via `streamlit.testing.v1.AppTest` during the
-portfolio audit, with zero exceptions on both a normal and a defective image.
+These are two illustrative test images, not a sample of the dataset. The same policy leaves some wrong predictions
+unreviewed: in the probe run, `test/color/002.png` (defective) was predicted `good` at confidence 0.81 and not flagged;
+the out-of-fold auto-decided accuracy is 0.907, so roughly 1 in 11 auto-decided parts is wrong.
+
+**How they were captured:** the API (the real `docker/Dockerfile.api` image, real checkpoints, a fresh SQLite database)
+and the Streamlit demo ran in containers; headless Chrome, driven over the DevTools protocol, attached the real image
+files through the demo's file input, clicked "Run inspection", and then clicked through the Swagger UI. Every value shown
+is a real response from that API. The recording script is not part of this repository.
 
 ## Regenerating the screenshots
 

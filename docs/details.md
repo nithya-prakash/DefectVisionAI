@@ -22,9 +22,9 @@ primary interface, not a parallel prediction path.
 
 ![Demo: upload an image, get a prediction with confidence/uncertainty/anomaly heatmap, then the human-review API workflow](../docs/images/demo.gif)
 
-| Normal part | Defective part (flagged for review) |
+| Normal part (auto-decided) | Scratched part, misclassified as `bent` and flagged for review |
 |---|---|
-| ![Good prediction: confidence 0.85, no review needed](../docs/images/01_good_prediction.png) | ![Defective prediction: confidence 0.43, flagged for human review, with anomaly heatmap](../docs/images/02_defect_prediction.png) |
+| ![Good prediction: confidence 0.87, no review needed](../docs/images/01_good_prediction.png) | ![Scratch image predicted bent: confidence 0.36, flagged for human review, with anomaly heatmap](../docs/images/02_defect_prediction.png) |
 
 The human-review workflow itself, via the API's `/docs` Swagger UI:
 
