@@ -97,6 +97,13 @@ set. This is a known risk of temperature scaling under small validation sets in
 general — the specific causal story here is an interpretation of this one run, not a
 universal claim, and is reported as a negative result rather than hidden.
 
+Follow-up: I then fit the temperature leave-one-fold-out on 80 out-of-fold predictions
+(5-fold cross-validation over the labeled pool). That improved out-of-fold ECE
+(0.121 → 0.080, T=1.457, softening rather than sharpening), which supports the
+small-validation-set explanation, and that temperature and the 0.74 review threshold
+are what the API now uses. I did not measure test-set ECE with the new temperature,
+and the cross-validation models are not the deployed checkpoint.
+
 ## Active Learning
 
 **14. What is active learning, in this project?**
@@ -190,8 +197,8 @@ existing design, not something implemented here.
 
 **27. What would you change with a much larger dataset?**
 Fine-tune the full CNN in the active-learning loop instead of using frozen
-embeddings, use a proper validation set for temperature scaling instead of 16
-images, and get a more statistically meaningful read on whether any acquisition
+embeddings, use a proper validation set for temperature scaling (cross-validation
+on the pool already replaced the 16-image fit), and get a more statistically meaningful read on whether any acquisition
 strategy actually beats random.
 
 **28. What are the biggest limitations of the current experiment?**
@@ -204,7 +211,7 @@ negative or inconclusive rather than clean wins — all stated directly in
 **29. What would you do next scientifically?**
 Extend to a second MVTec category (`screw`) to see whether the active-learning and
 calibration findings generalize or are artifacts of this one category's small
-sample; try cross-validated temperature fitting; compare MC-dropout (already
+sample; compare MC-dropout (already
 implemented in `models/uncertainty.py`, not yet wired into the live inference path)
 against softmax entropy as the review-routing signal.
 

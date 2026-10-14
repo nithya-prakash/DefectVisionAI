@@ -28,6 +28,13 @@ class UncertaintyResult:
     needs_review: bool
 
 
+def apply_temperature(logits: np.ndarray, temperature: float) -> np.ndarray:
+    """Divide logits by a calibration temperature (1.0 = unchanged; > 1 softens confidence)."""
+    if temperature <= 0:
+        raise ValueError("temperature must be positive")
+    return np.asarray(logits) / temperature
+
+
 def softmax_uncertainty(
     logits: np.ndarray,
     class_names: list[str],

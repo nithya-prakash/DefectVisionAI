@@ -1,0 +1,1343 @@
+{
+  "frozen": {
+    "created_utc": "2026-10-14T17:55:07.867887+00:00",
+    "protocol": "    python scripts/evaluate_review_policy.py validate   # pool only; writes the frozen policy\n    python scripts/evaluate_review_policy.py test        # reads the frozen policy; scores the test set once",
+    "pool_ids": [
+      "scratch/007.png",
+      "good/004.png",
+      "color/018.png",
+      "bent/020.png",
+      "scratch/005.png",
+      "flip/009.png",
+      "flip/002.png",
+      "scratch/015.png",
+      "bent/017.png",
+      "color/007.png",
+      "good/020.png",
+      "bent/021.png",
+      "flip/018.png",
+      "bent/001.png",
+      "good/010.png",
+      "scratch/004.png",
+      "good/007.png",
+      "good/016.png",
+      "color/002.png",
+      "scratch/002.png",
+      "scratch/017.png",
+      "good/000.png",
+      "bent/002.png",
+      "color/001.png",
+      "good/005.png",
+      "scratch/010.png",
+      "bent/009.png",
+      "color/005.png",
+      "color/004.png",
+      "flip/000.png",
+      "flip/016.png",
+      "bent/005.png",
+      "bent/016.png",
+      "scratch/018.png",
+      "color/000.png",
+      "scratch/011.png",
+      "scratch/001.png",
+      "good/002.png",
+      "flip/004.png",
+      "color/006.png",
+      "good/021.png",
+      "scratch/019.png",
+      "scratch/009.png",
+      "scratch/016.png",
+      "color/020.png",
+      "bent/023.png",
+      "flip/011.png",
+      "good/018.png",
+      "color/019.png",
+      "bent/015.png",
+      "flip/021.png",
+      "good/008.png",
+      "good/012.png",
+      "bent/004.png",
+      "bent/022.png",
+      "color/008.png",
+      "flip/005.png",
+      "good/015.png",
+      "good/019.png",
+      "color/012.png",
+      "bent/011.png",
+      "bent/008.png",
+      "bent/000.png",
+      "bent/003.png",
+      "flip/007.png",
+      "scratch/003.png",
+      "flip/015.png",
+      "flip/022.png",
+      "flip/019.png",
+      "good/006.png",
+      "color/010.png",
+      "flip/012.png",
+      "color/017.png",
+      "flip/020.png",
+      "bent/012.png",
+      "scratch/013.png",
+      "scratch/020.png",
+      "bent/013.png",
+      "color/003.png",
+      "flip/010.png"
+    ],
+    "test_ids_sha256": "0fb37d1cc4187fb5338187d76dfa1c7eb3694d56f8c8c0bba43e948ab6eed0f4",
+    "cv": {
+      "n_folds": 5,
+      "folds": [
+        2,
+        4,
+        3,
+        2,
+        2,
+        3,
+        3,
+        0,
+        1,
+        3,
+        2,
+        0,
+        2,
+        3,
+        2,
+        4,
+        1,
+        2,
+        1,
+        1,
+        3,
+        3,
+        3,
+        4,
+        0,
+        2,
+        3,
+        1,
+        2,
+        4,
+        0,
+        3,
+        0,
+        3,
+        2,
+        3,
+        0,
+        0,
+        3,
+        4,
+        1,
+        4,
+        0,
+        4,
+        3,
+        1,
+        1,
+        3,
+        4,
+        4,
+        2,
+        4,
+        1,
+        4,
+        4,
+        0,
+        1,
+        4,
+        3,
+        0,
+        4,
+        2,
+        2,
+        0,
+        0,
+        1,
+        0,
+        1,
+        2,
+        0,
+        0,
+        4,
+        2,
+        1,
+        0,
+        2,
+        1,
+        1,
+        1,
+        4
+      ],
+      "epochs_fixed": 8,
+      "grouped_by_identical_image_bytes": true,
+      "n_duplicate_image_groups": 0,
+      "note": "CV models are not the deployed checkpoint; fixed epochs, no fold used for early stopping"
+    },
+    "temperature": {
+      "ece_raw_oof": 0.12107181400060654,
+      "ece_leave_one_fold_out": 0.08036633990705014,
+      "fitted_on_all_oof": 1.4567946195602417,
+      "adopted": true,
+      "value_used": 1.4567946195602417
+    },
+    "review_threshold_selection": {
+      "rule": "maximise auto-decision coverage subject to out-of-fold auto-accuracy >= 0.90",
+      "selected": true,
+      "target_accuracy": 0.9,
+      "threshold": 0.74,
+      "coverage": 0.5375,
+      "review_rate": 0.4625,
+      "auto_accuracy": 0.9069767441860465,
+      "sweep": [
+        {
+          "threshold": 0.3,
+          "n_auto_decided": 80,
+          "coverage": 1.0,
+          "review_rate": 0.0,
+          "auto_accuracy": 0.7
+        },
+        {
+          "threshold": 0.31,
+          "n_auto_decided": 80,
+          "coverage": 1.0,
+          "review_rate": 0.0,
+          "auto_accuracy": 0.7
+        },
+        {
+          "threshold": 0.32,
+          "n_auto_decided": 80,
+          "coverage": 1.0,
+          "review_rate": 0.0,
+          "auto_accuracy": 0.7
+        },
+        {
+          "threshold": 0.33,
+          "n_auto_decided": 80,
+          "coverage": 1.0,
+          "review_rate": 0.0,
+          "auto_accuracy": 0.7
+        },
+        {
+          "threshold": 0.34,
+          "n_auto_decided": 80,
+          "coverage": 1.0,
+          "review_rate": 0.0,
+          "auto_accuracy": 0.7
+        },
+        {
+          "threshold": 0.35,
+          "n_auto_decided": 80,
+          "coverage": 1.0,
+          "review_rate": 0.0,
+          "auto_accuracy": 0.7
+        },
+        {
+          "threshold": 0.36,
+          "n_auto_decided": 80,
+          "coverage": 1.0,
+          "review_rate": 0.0,
+          "auto_accuracy": 0.7
+        },
+        {
+          "threshold": 0.37,
+          "n_auto_decided": 79,
+          "coverage": 0.9875,
+          "review_rate": 0.012499999999999956,
+          "auto_accuracy": 0.7088607594936709
+        },
+        {
+          "threshold": 0.38,
+          "n_auto_decided": 78,
+          "coverage": 0.975,
+          "review_rate": 0.025000000000000022,
+          "auto_accuracy": 0.717948717948718
+        },
+        {
+          "threshold": 0.39,
+          "n_auto_decided": 78,
+          "coverage": 0.975,
+          "review_rate": 0.025000000000000022,
+          "auto_accuracy": 0.717948717948718
+        },
+        {
+          "threshold": 0.4,
+          "n_auto_decided": 78,
+          "coverage": 0.975,
+          "review_rate": 0.025000000000000022,
+          "auto_accuracy": 0.717948717948718
+        },
+        {
+          "threshold": 0.41,
+          "n_auto_decided": 77,
+          "coverage": 0.9625,
+          "review_rate": 0.03749999999999998,
+          "auto_accuracy": 0.7272727272727273
+        },
+        {
+          "threshold": 0.42,
+          "n_auto_decided": 77,
+          "coverage": 0.9625,
+          "review_rate": 0.03749999999999998,
+          "auto_accuracy": 0.7272727272727273
+        },
+        {
+          "threshold": 0.43,
+          "n_auto_decided": 75,
+          "coverage": 0.9375,
+          "review_rate": 0.0625,
+          "auto_accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.44,
+          "n_auto_decided": 73,
+          "coverage": 0.9125,
+          "review_rate": 0.08750000000000002,
+          "auto_accuracy": 0.726027397260274
+        },
+        {
+          "threshold": 0.45,
+          "n_auto_decided": 73,
+          "coverage": 0.9125,
+          "review_rate": 0.08750000000000002,
+          "auto_accuracy": 0.726027397260274
+        },
+        {
+          "threshold": 0.46,
+          "n_auto_decided": 71,
+          "coverage": 0.8875,
+          "review_rate": 0.11250000000000004,
+          "auto_accuracy": 0.7464788732394366
+        },
+        {
+          "threshold": 0.47,
+          "n_auto_decided": 70,
+          "coverage": 0.875,
+          "review_rate": 0.125,
+          "auto_accuracy": 0.7571428571428571
+        },
+        {
+          "threshold": 0.48,
+          "n_auto_decided": 69,
+          "coverage": 0.8625,
+          "review_rate": 0.13749999999999996,
+          "auto_accuracy": 0.7681159420289855
+        },
+        {
+          "threshold": 0.49,
+          "n_auto_decided": 69,
+          "coverage": 0.8625,
+          "review_rate": 0.13749999999999996,
+          "auto_accuracy": 0.7681159420289855
+        },
+        {
+          "threshold": 0.5,
+          "n_auto_decided": 68,
+          "coverage": 0.85,
+          "review_rate": 0.15000000000000002,
+          "auto_accuracy": 0.7794117647058824
+        },
+        {
+          "threshold": 0.51,
+          "n_auto_decided": 67,
+          "coverage": 0.8375,
+          "review_rate": 0.16249999999999998,
+          "auto_accuracy": 0.7910447761194029
+        },
+        {
+          "threshold": 0.52,
+          "n_auto_decided": 64,
+          "coverage": 0.8,
+          "review_rate": 0.19999999999999996,
+          "auto_accuracy": 0.8125
+        },
+        {
+          "threshold": 0.53,
+          "n_auto_decided": 64,
+          "coverage": 0.8,
+          "review_rate": 0.19999999999999996,
+          "auto_accuracy": 0.8125
+        },
+        {
+          "threshold": 0.54,
+          "n_auto_decided": 63,
+          "coverage": 0.7875,
+          "review_rate": 0.21250000000000002,
+          "auto_accuracy": 0.8095238095238095
+        },
+        {
+          "threshold": 0.55,
+          "n_auto_decided": 63,
+          "coverage": 0.7875,
+          "review_rate": 0.21250000000000002,
+          "auto_accuracy": 0.8095238095238095
+        },
+        {
+          "threshold": 0.56,
+          "n_auto_decided": 63,
+          "coverage": 0.7875,
+          "review_rate": 0.21250000000000002,
+          "auto_accuracy": 0.8095238095238095
+        },
+        {
+          "threshold": 0.57,
+          "n_auto_decided": 61,
+          "coverage": 0.7625,
+          "review_rate": 0.23750000000000004,
+          "auto_accuracy": 0.819672131147541
+        },
+        {
+          "threshold": 0.58,
+          "n_auto_decided": 57,
+          "coverage": 0.7125,
+          "review_rate": 0.2875,
+          "auto_accuracy": 0.8245614035087719
+        },
+        {
+          "threshold": 0.59,
+          "n_auto_decided": 56,
+          "coverage": 0.7,
+          "review_rate": 0.30000000000000004,
+          "auto_accuracy": 0.8392857142857143
+        },
+        {
+          "threshold": 0.6,
+          "n_auto_decided": 56,
+          "coverage": 0.7,
+          "review_rate": 0.30000000000000004,
+          "auto_accuracy": 0.8392857142857143
+        },
+        {
+          "threshold": 0.61,
+          "n_auto_decided": 54,
+          "coverage": 0.675,
+          "review_rate": 0.32499999999999996,
+          "auto_accuracy": 0.8703703703703703
+        },
+        {
+          "threshold": 0.62,
+          "n_auto_decided": 52,
+          "coverage": 0.65,
+          "review_rate": 0.35,
+          "auto_accuracy": 0.8653846153846154
+        },
+        {
+          "threshold": 0.63,
+          "n_auto_decided": 51,
+          "coverage": 0.6375,
+          "review_rate": 0.36250000000000004,
+          "auto_accuracy": 0.8823529411764706
+        },
+        {
+          "threshold": 0.64,
+          "n_auto_decided": 51,
+          "coverage": 0.6375,
+          "review_rate": 0.36250000000000004,
+          "auto_accuracy": 0.8823529411764706
+        },
+        {
+          "threshold": 0.65,
+          "n_auto_decided": 51,
+          "coverage": 0.6375,
+          "review_rate": 0.36250000000000004,
+          "auto_accuracy": 0.8823529411764706
+        },
+        {
+          "threshold": 0.66,
+          "n_auto_decided": 50,
+          "coverage": 0.625,
+          "review_rate": 0.375,
+          "auto_accuracy": 0.88
+        },
+        {
+          "threshold": 0.67,
+          "n_auto_decided": 48,
+          "coverage": 0.6,
+          "review_rate": 0.4,
+          "auto_accuracy": 0.875
+        },
+        {
+          "threshold": 0.68,
+          "n_auto_decided": 48,
+          "coverage": 0.6,
+          "review_rate": 0.4,
+          "auto_accuracy": 0.875
+        },
+        {
+          "threshold": 0.69,
+          "n_auto_decided": 48,
+          "coverage": 0.6,
+          "review_rate": 0.4,
+          "auto_accuracy": 0.875
+        },
+        {
+          "threshold": 0.7,
+          "n_auto_decided": 47,
+          "coverage": 0.5875,
+          "review_rate": 0.4125,
+          "auto_accuracy": 0.8936170212765957
+        },
+        {
+          "threshold": 0.71,
+          "n_auto_decided": 46,
+          "coverage": 0.575,
+          "review_rate": 0.42500000000000004,
+          "auto_accuracy": 0.8913043478260869
+        },
+        {
+          "threshold": 0.72,
+          "n_auto_decided": 45,
+          "coverage": 0.5625,
+          "review_rate": 0.4375,
+          "auto_accuracy": 0.8888888888888888
+        },
+        {
+          "threshold": 0.73,
+          "n_auto_decided": 44,
+          "coverage": 0.55,
+          "review_rate": 0.44999999999999996,
+          "auto_accuracy": 0.8863636363636364
+        },
+        {
+          "threshold": 0.74,
+          "n_auto_decided": 43,
+          "coverage": 0.5375,
+          "review_rate": 0.4625,
+          "auto_accuracy": 0.9069767441860465
+        },
+        {
+          "threshold": 0.75,
+          "n_auto_decided": 42,
+          "coverage": 0.525,
+          "review_rate": 0.475,
+          "auto_accuracy": 0.9285714285714286
+        },
+        {
+          "threshold": 0.76,
+          "n_auto_decided": 40,
+          "coverage": 0.5,
+          "review_rate": 0.5,
+          "auto_accuracy": 0.95
+        },
+        {
+          "threshold": 0.77,
+          "n_auto_decided": 39,
+          "coverage": 0.4875,
+          "review_rate": 0.5125,
+          "auto_accuracy": 0.9487179487179487
+        },
+        {
+          "threshold": 0.78,
+          "n_auto_decided": 37,
+          "coverage": 0.4625,
+          "review_rate": 0.5375,
+          "auto_accuracy": 0.972972972972973
+        },
+        {
+          "threshold": 0.79,
+          "n_auto_decided": 36,
+          "coverage": 0.45,
+          "review_rate": 0.55,
+          "auto_accuracy": 0.9722222222222222
+        },
+        {
+          "threshold": 0.8,
+          "n_auto_decided": 35,
+          "coverage": 0.4375,
+          "review_rate": 0.5625,
+          "auto_accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.81,
+          "n_auto_decided": 35,
+          "coverage": 0.4375,
+          "review_rate": 0.5625,
+          "auto_accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.82,
+          "n_auto_decided": 34,
+          "coverage": 0.425,
+          "review_rate": 0.575,
+          "auto_accuracy": 0.9705882352941176
+        },
+        {
+          "threshold": 0.83,
+          "n_auto_decided": 33,
+          "coverage": 0.4125,
+          "review_rate": 0.5875,
+          "auto_accuracy": 0.9696969696969697
+        },
+        {
+          "threshold": 0.84,
+          "n_auto_decided": 33,
+          "coverage": 0.4125,
+          "review_rate": 0.5875,
+          "auto_accuracy": 0.9696969696969697
+        },
+        {
+          "threshold": 0.85,
+          "n_auto_decided": 33,
+          "coverage": 0.4125,
+          "review_rate": 0.5875,
+          "auto_accuracy": 0.9696969696969697
+        },
+        {
+          "threshold": 0.86,
+          "n_auto_decided": 33,
+          "coverage": 0.4125,
+          "review_rate": 0.5875,
+          "auto_accuracy": 0.9696969696969697
+        },
+        {
+          "threshold": 0.87,
+          "n_auto_decided": 31,
+          "coverage": 0.3875,
+          "review_rate": 0.6125,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.88,
+          "n_auto_decided": 30,
+          "coverage": 0.375,
+          "review_rate": 0.625,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.89,
+          "n_auto_decided": 29,
+          "coverage": 0.3625,
+          "review_rate": 0.6375,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.9,
+          "n_auto_decided": 28,
+          "coverage": 0.35,
+          "review_rate": 0.65,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.91,
+          "n_auto_decided": 27,
+          "coverage": 0.3375,
+          "review_rate": 0.6625,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.92,
+          "n_auto_decided": 27,
+          "coverage": 0.3375,
+          "review_rate": 0.6625,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.93,
+          "n_auto_decided": 24,
+          "coverage": 0.3,
+          "review_rate": 0.7,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.94,
+          "n_auto_decided": 21,
+          "coverage": 0.2625,
+          "review_rate": 0.7375,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.95,
+          "n_auto_decided": 19,
+          "coverage": 0.2375,
+          "review_rate": 0.7625,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.96,
+          "n_auto_decided": 18,
+          "coverage": 0.225,
+          "review_rate": 0.775,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.97,
+          "n_auto_decided": 15,
+          "coverage": 0.1875,
+          "review_rate": 0.8125,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.98,
+          "n_auto_decided": 10,
+          "coverage": 0.125,
+          "review_rate": 0.875,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 0.99,
+          "n_auto_decided": 8,
+          "coverage": 0.1,
+          "review_rate": 0.9,
+          "auto_accuracy": 1.0
+        },
+        {
+          "threshold": 1.0,
+          "n_auto_decided": 0,
+          "coverage": 0.0,
+          "review_rate": 1.0,
+          "auto_accuracy": null
+        }
+      ]
+    },
+    "classifier_policy": {
+      "threshold": 0.74,
+      "validated": true,
+      "note": "validated on out-of-fold pool"
+    },
+    "anomaly_gate": {
+      "rule": "threshold = 0.95 quantile of known-good pool anomaly scores",
+      "threshold": 4.417238712310791,
+      "enable_criterion": "combined policy auto-accuracy >= 0.9 and coverage >= 0.5 on the pool",
+      "pool_combined_policy": {
+        "threshold": 0.5,
+        "n": 80,
+        "n_reviewed": 76,
+        "review_rate": 0.95,
+        "n_auto_decided": 4,
+        "coverage": 0.05,
+        "auto_accuracy": 0.75,
+        "auto_accuracy_ci95": [
+          0.3006360524426366,
+          0.9544139373553637
+        ],
+        "overall_accuracy": 0.7
+      },
+      "pool_anomaly_flag_rate_good": 0.06666666666666667,
+      "pool_anomaly_flag_rate_defective": 0.9384615384615385,
+      "enabled": false
+    },
+    "pool_oof": {
+      "n": 80,
+      "accuracy": 0.7,
+      "accuracy_ci95": [
+        0.5923163971203269,
+        0.789355708373843
+      ],
+      "classifier_only_policy": {
+        "threshold": 0.74,
+        "n": 80,
+        "n_reviewed": 37,
+        "review_rate": 0.4625,
+        "n_auto_decided": 43,
+        "coverage": 0.5375,
+        "auto_accuracy": 0.9069767441860465,
+        "auto_accuracy_ci95": [
+          0.7839701160146731,
+          0.9632289548966534
+        ],
+        "overall_accuracy": 0.7
+      },
+      "classification_metrics": {
+        "n_samples": 80,
+        "accuracy": 0.7,
+        "macro_f1": 0.6933333333333334,
+        "per_class": {
+          "bent": {
+            "precision": 0.6363636363636364,
+            "recall": 0.7777777777777778,
+            "f1": 0.7,
+            "support": 18
+          },
+          "color": {
+            "precision": 0.4,
+            "recall": 0.4,
+            "f1": 0.4,
+            "support": 15
+          },
+          "flip": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 16
+          },
+          "good": {
+            "precision": 0.5384615384615384,
+            "recall": 0.4666666666666667,
+            "f1": 0.5,
+            "support": 15
+          },
+          "scratch": {
+            "precision": 0.9285714285714286,
+            "recall": 0.8125,
+            "f1": 0.8666666666666667,
+            "support": 16
+          }
+        },
+        "confusion_matrix": [
+          [
+            14,
+            2,
+            0,
+            1,
+            1
+          ],
+          [
+            4,
+            6,
+            0,
+            5,
+            0
+          ],
+          [
+            0,
+            0,
+            16,
+            0,
+            0
+          ],
+          [
+            2,
+            6,
+            0,
+            7,
+            0
+          ],
+          [
+            2,
+            1,
+            0,
+            0,
+            13
+          ]
+        ],
+        "class_names": [
+          "bent",
+          "color",
+          "flip",
+          "good",
+          "scratch"
+        ]
+      }
+    }
+  },
+  "test": {
+    "created_utc": "2026-10-14T17:55:45.125628+00:00",
+    "frozen_policy_created_utc": "2026-10-14T17:55:07.867887+00:00",
+    "test_set": {
+      "n": 35,
+      "n_defective": 28,
+      "n_good": 7,
+      "ids": [
+        "color/014.png",
+        "scratch/014.png",
+        "flip/014.png",
+        "flip/008.png",
+        "color/021.png",
+        "good/013.png",
+        "flip/006.png",
+        "good/001.png",
+        "flip/013.png",
+        "color/013.png",
+        "color/009.png",
+        "color/011.png",
+        "bent/010.png",
+        "bent/006.png",
+        "bent/019.png",
+        "color/015.png",
+        "scratch/012.png",
+        "scratch/021.png",
+        "flip/017.png",
+        "flip/003.png",
+        "bent/018.png",
+        "scratch/000.png",
+        "good/014.png",
+        "good/009.png",
+        "scratch/008.png",
+        "good/017.png",
+        "good/011.png",
+        "scratch/006.png",
+        "good/003.png",
+        "scratch/022.png",
+        "bent/014.png",
+        "flip/001.png",
+        "bent/007.png",
+        "bent/024.png",
+        "color/016.png"
+      ]
+    },
+    "five_class_classifier_only": {
+      "accuracy": 0.8,
+      "accuracy_ci95_wilson": [
+        0.6410806339053748,
+        0.899576805540992
+      ],
+      "macro_f1": 0.7936507936507937,
+      "per_class": {
+        "bent": {
+          "precision": 0.6,
+          "recall": 0.42857142857142855,
+          "f1": 0.5,
+          "support": 7,
+          "recall_ci95_wilson": [
+            0.15821692226262685,
+            0.7495457695909742
+          ]
+        },
+        "color": {
+          "precision": 0.6363636363636364,
+          "recall": 1.0,
+          "f1": 0.7777777777777778,
+          "support": 7,
+          "recall_ci95_wilson": [
+            0.6456611570247934,
+            1.0
+          ]
+        },
+        "flip": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 7,
+          "recall_ci95_wilson": [
+            0.6456611570247934,
+            1.0
+          ]
+        },
+        "good": {
+          "precision": 0.8571428571428571,
+          "recall": 0.8571428571428571,
+          "f1": 0.8571428571428571,
+          "support": 7,
+          "recall_ci95_wilson": [
+            0.48686549668097007,
+            0.9743210440510253
+          ]
+        },
+        "scratch": {
+          "precision": 1.0,
+          "recall": 0.7142857142857143,
+          "f1": 0.8333333333333334,
+          "support": 7,
+          "recall_ci95_wilson": [
+            0.35892909014821267,
+            0.9177828342909844
+          ]
+        }
+      },
+      "confusion_matrix": [
+        [
+          3,
+          3,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          6,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          5
+        ]
+      ],
+      "class_names": [
+        "bent",
+        "color",
+        "flip",
+        "good",
+        "scratch"
+      ]
+    },
+    "binary_defect_detection_same_images": {
+      "task": "defective (4 defect types) vs good, same 35 image ids, same labels",
+      "classifier_score": "1 - P(good)",
+      "patchcore_score": "max-patch nearest-neighbour distance (final memory bank, 220 train normals)",
+      "classifier": {
+        "auroc": 0.9846938775510204,
+        "auroc_ci95_stratified_bootstrap": [
+          0.9387755102040817,
+          1.0
+        ],
+        "auprc": 0.996343537414966,
+        "auprc_ci95_stratified_bootstrap": [
+          0.9866071428571427,
+          1.0
+        ],
+        "auprc_of_uninformative_scorer": 0.8
+      },
+      "patchcore": {
+        "auroc": 0.8979591836734694,
+        "auroc_ci95_stratified_bootstrap": [
+          0.7551020408163265,
+          1.0
+        ],
+        "auprc": 0.9729432076554051,
+        "auprc_ci95_stratified_bootstrap": [
+          0.9355497856067023,
+          0.9999999999999999
+        ],
+        "auprc_of_uninformative_scorer": 0.8
+      },
+      "auroc_difference_patchcore_minus_classifier_ci95_paired": [
+        -0.22959183673469385,
+        0.010204081632653073
+      ],
+      "classifier_decision_argmax_not_good": {
+        "n_defective": 28,
+        "n_good": 7,
+        "defects_caught": 27,
+        "recall": 0.9642857142857143,
+        "recall_ci95": [
+          0.8228742388150135,
+          0.9936676435024582
+        ],
+        "good_flagged": 1,
+        "false_alarm_rate": 0.14285714285714285,
+        "false_alarm_ci95": [
+          0.02567895594897479,
+          0.51313450331903
+        ],
+        "accuracy": 0.9428571428571428
+      },
+      "patchcore_decision_at_frozen_threshold": {
+        "threshold": 4.417238712310791,
+        "n_defective": 28,
+        "n_good": 7,
+        "defects_caught": 24,
+        "recall": 0.8571428571428571,
+        "recall_ci95": [
+          0.6850982695512267,
+          0.9430108706929821
+        ],
+        "good_flagged": 2,
+        "false_alarm_rate": 0.2857142857142857,
+        "false_alarm_ci95": [
+          0.0822171657090155,
+          0.6410709098517873
+        ],
+        "accuracy": 0.8285714285714286
+      }
+    },
+    "review_policy_frozen": {
+      "classifier_threshold": 0.74,
+      "validated": true,
+      "note": "validated on out-of-fold pool",
+      "outcome": {
+        "threshold": 0.74,
+        "n": 35,
+        "n_reviewed": 20,
+        "review_rate": 0.5714285714285714,
+        "n_auto_decided": 15,
+        "coverage": 0.42857142857142855,
+        "auto_accuracy": 1.0,
+        "auto_accuracy_ci95": [
+          0.7961107336956521,
+          1.0
+        ],
+        "overall_accuracy": 0.8
+      }
+    },
+    "anomaly_gate": {
+      "enabled_in_policy": false,
+      "enable_criterion": "combined policy auto-accuracy >= 0.9 and coverage >= 0.5 on the pool",
+      "evaluated_as_if_enabled": {
+        "threshold": 0.5,
+        "n": 35,
+        "n_reviewed": 34,
+        "review_rate": 0.9714285714285714,
+        "n_auto_decided": 1,
+        "coverage": 0.02857142857142857,
+        "auto_accuracy": 1.0,
+        "auto_accuracy_ci95": [
+          0.20654329147389294,
+          1.0
+        ],
+        "overall_accuracy": 0.8
+      },
+      "anomaly_flag_rate_good": 0.2857142857142857,
+      "anomaly_flag_rate_defective": 0.8571428571428571
+    },
+    "per_image": [
+      {
+        "id": "color/014.png",
+        "true": "color",
+        "pred": "color",
+        "confidence": 0.6941814422607422,
+        "anomaly_score": 5.530068397521973
+      },
+      {
+        "id": "scratch/014.png",
+        "true": "scratch",
+        "pred": "scratch",
+        "confidence": 0.5262928009033203,
+        "anomaly_score": 4.577488899230957
+      },
+      {
+        "id": "flip/014.png",
+        "true": "flip",
+        "pred": "flip",
+        "confidence": 0.972379744052887,
+        "anomaly_score": 5.566487789154053
+      },
+      {
+        "id": "flip/008.png",
+        "true": "flip",
+        "pred": "flip",
+        "confidence": 0.9875848293304443,
+        "anomaly_score": 6.6291375160217285
+      },
+      {
+        "id": "color/021.png",
+        "true": "color",
+        "pred": "color",
+        "confidence": 0.8759586811065674,
+        "anomaly_score": 4.601292610168457
+      },
+      {
+        "id": "good/013.png",
+        "true": "good",
+        "pred": "good",
+        "confidence": 0.5904614925384521,
+        "anomaly_score": 3.9333324432373047
+      },
+      {
+        "id": "flip/006.png",
+        "true": "flip",
+        "pred": "flip",
+        "confidence": 0.9731159806251526,
+        "anomaly_score": 5.491025447845459
+      },
+      {
+        "id": "good/001.png",
+        "true": "good",
+        "pred": "good",
+        "confidence": 0.4892392158508301,
+        "anomaly_score": 3.7609479427337646
+      },
+      {
+        "id": "flip/013.png",
+        "true": "flip",
+        "pred": "flip",
+        "confidence": 0.9593541622161865,
+        "anomaly_score": 5.514209747314453
+      },
+      {
+        "id": "color/013.png",
+        "true": "color",
+        "pred": "color",
+        "confidence": 0.7848158478736877,
+        "anomaly_score": 5.0382914543151855
+      },
+      {
+        "id": "color/009.png",
+        "true": "color",
+        "pred": "color",
+        "confidence": 0.6875099539756775,
+        "anomaly_score": 5.4159836769104
+      },
+      {
+        "id": "color/011.png",
+        "true": "color",
+        "pred": "color",
+        "confidence": 0.5977044105529785,
+        "anomaly_score": 4.903607368469238
+      },
+      {
+        "id": "bent/010.png",
+        "true": "bent",
+        "pred": "bent",
+        "confidence": 0.4260721802711487,
+        "anomaly_score": 4.939178466796875
+      },
+      {
+        "id": "bent/006.png",
+        "true": "bent",
+        "pred": "color",
+        "confidence": 0.4948801100254059,
+        "anomaly_score": 5.266264915466309
+      },
+      {
+        "id": "bent/019.png",
+        "true": "bent",
+        "pred": "color",
+        "confidence": 0.35694727301597595,
+        "anomaly_score": 5.413666725158691
+      },
+      {
+        "id": "color/015.png",
+        "true": "color",
+        "pred": "color",
+        "confidence": 0.8462239503860474,
+        "anomaly_score": 4.314645767211914
+      },
+      {
+        "id": "scratch/012.png",
+        "true": "scratch",
+        "pred": "scratch",
+        "confidence": 0.4794860780239105,
+        "anomaly_score": 4.545220851898193
+      },
+      {
+        "id": "scratch/021.png",
+        "true": "scratch",
+        "pred": "scratch",
+        "confidence": 0.5557004809379578,
+        "anomaly_score": 4.333908557891846
+      },
+      {
+        "id": "flip/017.png",
+        "true": "flip",
+        "pred": "flip",
+        "confidence": 0.9514715671539307,
+        "anomaly_score": 5.061526775360107
+      },
+      {
+        "id": "flip/003.png",
+        "true": "flip",
+        "pred": "flip",
+        "confidence": 0.9859327673912048,
+        "anomaly_score": 6.005929946899414
+      },
+      {
+        "id": "bent/018.png",
+        "true": "bent",
+        "pred": "bent",
+        "confidence": 0.8377609252929688,
+        "anomaly_score": 4.876858711242676
+      },
+      {
+        "id": "scratch/000.png",
+        "true": "scratch",
+        "pred": "bent",
+        "confidence": 0.3621140420436859,
+        "anomaly_score": 3.901278257369995
+      },
+      {
+        "id": "good/014.png",
+        "true": "good",
+        "pred": "good",
+        "confidence": 0.5986065864562988,
+        "anomaly_score": 3.9048659801483154
+      },
+      {
+        "id": "good/009.png",
+        "true": "good",
+        "pred": "good",
+        "confidence": 0.775560200214386,
+        "anomaly_score": 4.702401161193848
+      },
+      {
+        "id": "scratch/008.png",
+        "true": "scratch",
+        "pred": "scratch",
+        "confidence": 0.9442935585975647,
+        "anomaly_score": 5.964302062988281
+      },
+      {
+        "id": "good/017.png",
+        "true": "good",
+        "pred": "good",
+        "confidence": 0.6600460410118103,
+        "anomaly_score": 3.8190407752990723
+      },
+      {
+        "id": "good/011.png",
+        "true": "good",
+        "pred": "color",
+        "confidence": 0.6017432808876038,
+        "anomaly_score": 4.824336528778076
+      },
+      {
+        "id": "scratch/006.png",
+        "true": "scratch",
+        "pred": "scratch",
+        "confidence": 0.9368506073951721,
+        "anomaly_score": 4.529229164123535
+      },
+      {
+        "id": "good/003.png",
+        "true": "good",
+        "pred": "good",
+        "confidence": 0.723852276802063,
+        "anomaly_score": 3.7799689769744873
+      },
+      {
+        "id": "scratch/022.png",
+        "true": "scratch",
+        "pred": "bent",
+        "confidence": 0.5761471390724182,
+        "anomaly_score": 4.054323673248291
+      },
+      {
+        "id": "bent/014.png",
+        "true": "bent",
+        "pred": "good",
+        "confidence": 0.5769520998001099,
+        "anomaly_score": 5.722702980041504
+      },
+      {
+        "id": "flip/001.png",
+        "true": "flip",
+        "pred": "flip",
+        "confidence": 0.9569399952888489,
+        "anomaly_score": 5.943394184112549
+      },
+      {
+        "id": "bent/007.png",
+        "true": "bent",
+        "pred": "color",
+        "confidence": 0.3792668581008911,
+        "anomaly_score": 5.252147197723389
+      },
+      {
+        "id": "bent/024.png",
+        "true": "bent",
+        "pred": "bent",
+        "confidence": 0.6734060645103455,
+        "anomaly_score": 5.141810894012451
+      },
+      {
+        "id": "color/016.png",
+        "true": "color",
+        "pred": "color",
+        "confidence": 0.7537883520126343,
+        "anomaly_score": 4.568933486938477
+      }
+    ],
+    "policy_in_effect_outcome": {
+      "threshold": 0.5,
+      "n": 35,
+      "n_reviewed": 20,
+      "review_rate": 0.5714285714285714,
+      "n_auto_decided": 15,
+      "coverage": 0.42857142857142855,
+      "auto_accuracy": 1.0,
+      "auto_accuracy_ci95": [
+        0.7961107336956521,
+        1.0
+      ],
+      "overall_accuracy": 0.8
+    }
+  }
+}

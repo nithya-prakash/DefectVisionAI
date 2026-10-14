@@ -89,7 +89,49 @@ Temperature scaling was fit on the 16-image validation set and evaluated for Exp
 
 **Interpretation, scoped to this experiment:** temperature scaling made calibration worse here rather than better. The most likely explanation is that fitting a single scalar temperature on only 16 validation examples is unstable -- the fitted value overfit that small sample and over-sharpened confidence on the held-out test set. This is a known risk of temperature scaling under small validation sets in general, but the specific causal claim here is an interpretation of this one run, not a universal result.
 
-The human-review confidence threshold (0.7, see `configs/inference.yaml`) was chosen by this explicit rule, not asserted as optimal: *smallest threshold with auto-decided accuracy >= 0.9 on held-out test (n=35); falls back to 0.7 if none qualify*. Full threshold sweep in `reports/metrics/calibration.json`; reliability diagrams in `reports/figures/reliability_diagram.png`.
+The sweep in `reports/metrics/calibration.json` is descriptive only: no review threshold is selected from the held-out test set. The temperature above is the 16-image fit; the review threshold and temperature actually used come from cross-validated out-of-fold predictions (next section). Reliability diagrams in `reports/figures/reliability_diagram.png`.
+
+## 8b. Review policy and fair model comparison
+
+**Protocol (frozen before any test image was scored).** Five-fold cross-validation over the 80-image labeled pool (the same ResNet18 recipe, trained on 64 and predicting the other 16, fixed 8 epochs so no fold is used for early stopping; these CV models are not the deployed checkpoint) gives out-of-fold predictions for every pool image. Temperature is fit leave-one-fold-out and adopted only if pooled ECE improves; the review threshold maximises auto-decision coverage subject to out-of-fold auto-accuracy >= 0.90. The held-out test images (n=35: 28 defective, 7 good) are scored once, with the existing final checkpoint.
+
+| Out-of-fold (validation only) | Value |
+|---|---:|
+| Classifier accuracy (n=80) | 0.700 [0.59, 0.79] |
+| ECE raw / leave-one-fold-out temperature | 0.121 / 0.080 |
+| Temperature adopted | True (T=1.457) |
+| Review threshold (validated) | 0.74 |
+| Review rate / coverage | 0.46 / 0.54 |
+| Auto-decided accuracy | 0.907 [0.78, 0.96] |
+
+**Review policy on the 35 test images** (threshold 0.74): 20 reviewed (review rate 0.57), 15 auto-decided (coverage 0.43), auto-decided accuracy 1.000 [0.80, 1.00]; overall accuracy 0.800. With 15 auto-decided images the interval is wide: this supports 'no auto-decided error was observed', not a guaranteed error rate.
+
+### Five-class classification (classifier only; PatchCore does not output classes)
+
+| Class | Precision | Recall [Wilson 95%] | F1 | n |
+|---|---:|---:|---:|---:|
+| bent | 0.60 | 0.43 [0.16, 0.75] | 0.50 | 7 |
+| color | 0.64 | 1.00 [0.65, 1.00] | 0.78 | 7 |
+| flip | 1.00 | 1.00 [0.65, 1.00] | 1.00 | 7 |
+| good | 0.86 | 0.86 [0.49, 0.97] | 0.86 | 7 |
+| scratch | 1.00 | 0.71 [0.36, 0.92] | 0.83 | 7 |
+
+Accuracy 0.800 [0.64, 0.90], macro-F1 0.794. With 7 images per class every per-class interval is wide; the weakest class is `bent`.
+
+### Binary defect detection on the same test images (defective vs good)
+
+Both models are scored on identical image IDs with the same labels. Different outputs: the classifier's score is 1 - P(good) (supervised, trained on labeled defect images from the same distribution), PatchCore's is a nearest-neighbour distance learned from normal images only. They answer the same yes/no question but are not interchangeable models.
+
+| Model | AUROC [bootstrap 95%] | AUPRC [bootstrap 95%] (base rate) | Defects caught | False alarms |
+|---|---:|---:|---:|---:|
+| Classifier (argmax not good) | 0.985 [0.94, 1.00] | 0.996 [0.99, 1.00] (0.80) | 27/28 | 1/7 |
+| PatchCore-lite (frozen threshold) | 0.898 [0.76, 1.00] | 0.973 [0.94, 1.00] (0.80) | 24/28 | 2/7 |
+
+Paired AUROC difference (PatchCore minus classifier) 95% interval [-0.23, 0.01]: it includes 0, so 35 images cannot separate the two. The 115-image PatchCore result in section 5 is a different protocol (the official test set, normal-only training) and is not comparable to these numbers.
+
+### Anomaly-score review gate
+
+Evaluated as implemented (anomaly score >= threshold sends the image to review; threshold = 4.42, the 95th percentile of known-good pool images). Enable criterion, written before the test set was scored: combined policy auto-accuracy >= 0.9 and coverage >= 0.5 on the pool. On the pool the combined policy sent 0.95 of images to review, so **the gate stays disabled** (`anomaly_review_threshold: null`). Run as if enabled on the test images it would review 0.97 of them (flagging 0.29 of good and 0.86 of defective images). The anomaly score is returned with each prediction (and drives the heatmap) but does not route review.
 
 ## 9. Active Learning
 
@@ -161,6 +203,6 @@ Every script reads its seed and hyperparameters from `configs/*.yaml` (see Secti
 
 **What was simulated:** the active-learning human-labeling loop (ground-truth labels standing in for a reviewer).
 
-**What came back negative or inconclusive, and is reported as such:** temperature scaling did not improve calibration here, and no active-learning acquisition strategy showed a statistically clear advantage over random sampling.
+**What came back negative or inconclusive, and is reported as such:** temperature scaling fit on the 16-image validation set worsened test ECE (a cross-validated fit on the 80-image pool improved out-of-fold ECE, section 8b); the anomaly-score review gate is disabled because it would review ~95% of images; no active-learning acquisition strategy showed a statistically clear advantage over random sampling; and 35 test images cannot separate PatchCore from the classifier on defect detection.
 
-**What remains future work:** extending to a second MVTec category (`screw`), periodic full-CNN fine-tuning in the active-learning loop once more labeled data is available, cross-validated temperature fitting, and evaluating MC-dropout as a second review-routing signal.
+**What remains future work:** extending to a second MVTec category (`screw`), periodic full-CNN fine-tuning in the active-learning loop once more labeled data is available, and evaluating MC-dropout as a second review-routing signal.

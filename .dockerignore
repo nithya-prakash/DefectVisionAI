@@ -1,0 +1,47 @@
+# Keeps the Docker build context small and free of local-only files.
+# The Dockerfiles COPY only pyproject.toml, constraints.txt, src/, configs/ and scripts/.
+# Unlike .gitignore, patterns here match from the context root, so `models` excludes the top-level
+# checkpoint folder and not the src/automotive_vision/models package.
+
+# version control, CI and editor/OS files
+.git
+.github
+.gitignore
+**/.DS_Store
+
+# virtual environments, caches and build output
+.venv
+venv
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+build
+dist
+
+# datasets, uploads, heatmaps and model checkpoints: mounted at run time, never baked into an image
+data
+models
+**/*.pt
+**/*.pth
+**/*.ckpt
+mlruns
+mlartifacts
+
+# generated reports, notebooks, tests, docs and the demo UI (not needed by the API or script images)
+reports
+notebooks
+tests
+docs
+demo
+
+# local databases, test artifacts and credentials
+*.db
+*.sqlite
+.env
+.env.*
+!.env.example

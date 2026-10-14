@@ -1,0 +1,46 @@
+{
+  "dataset": "metal_nut",
+  "n_train_normal": 220,
+  "n_test": 115,
+  "seed": 42,
+  "classical_baseline": {
+    "n_samples": 115,
+    "n_anomalous": 93,
+    "n_normal": 22,
+    "image_auroc": 0.576735092864125,
+    "image_auroc_ci95": [
+      0.45604821386004685,
+      0.6980786558595069
+    ],
+    "image_auprc": 0.8722514180009392,
+    "image_auprc_ci95": [
+      0.7928939811895898,
+      0.9306656394704799
+    ],
+    "inference_seconds_total": 5.2634711265563965,
+    "inference_seconds_per_image": 0.04576931414396866
+  },
+  "patchcore_lite": {
+    "n_samples": 115,
+    "n_anomalous": 93,
+    "n_normal": 22,
+    "image_auroc": 0.9442815249266862,
+    "image_auroc_ci95": [
+      0.8936545617351508,
+      0.980541237113402
+    ],
+    "image_auprc": 0.986976047395879,
+    "image_auprc_ci95": [
+      0.9737284977628259,
+      0.9960506491978812
+    ],
+    "n_pixels": 5770240,
+    "n_positive_pixels": 676274,
+    "pixel_auroc": 0.9531901897741756,
+    "memory_bank_patches": 10000,
+    "fit_seconds": 5.418151140213013,
+    "inference_seconds_total": 3.620795965194702,
+    "inference_seconds_per_image": 0.03148518230604089,
+    "device": "mps"
+  }
+}

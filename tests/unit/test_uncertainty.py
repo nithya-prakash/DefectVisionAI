@@ -1,8 +1,13 @@
 import numpy as np
+import pytest
 import torch
 from torch import nn
 
-from automotive_vision.models.uncertainty import mc_dropout_predict, softmax_uncertainty
+from automotive_vision.models.uncertainty import (
+    apply_temperature,
+    mc_dropout_predict,
+    softmax_uncertainty,
+)
 
 CLASS_NAMES = ["bent", "color", "flip", "good", "scratch"]
 
@@ -52,3 +57,15 @@ def test_mc_dropout_predict_returns_expected_shapes_and_restores_eval_mode():
     assert result["mean_entropy"].shape == (3,)
     assert np.allclose(result["mean_probs"].sum(axis=1), 1.0, atol=1e-5)
     assert model.training is False  # restored to the mode it was called in
+
+
+def test_apply_temperature_softens_without_changing_the_prediction() -> None:
+    logits = np.array([2.0, 0.5, 0.1])
+    names = ["a", "b", "c"]
+    raw = softmax_uncertainty(logits, names)
+    soft = softmax_uncertainty(apply_temperature(logits, 1.4568), names)
+    assert soft.label == raw.label
+    assert soft.probability < raw.probability
+    assert np.array_equal(apply_temperature(logits, 1.0), logits)
+    with pytest.raises(ValueError):
+        apply_temperature(logits, 0.0)

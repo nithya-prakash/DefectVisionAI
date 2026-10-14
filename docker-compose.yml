@@ -3,6 +3,8 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: automotive
+      # DEMO-ONLY credentials (user/password/database all "automotive"). Do not deploy with these:
+      # change them, and do not publish this database port, before any use beyond a local demo.
       POSTGRES_PASSWORD: automotive
       POSTGRES_DB: automotive_vision
     ports:
@@ -22,6 +24,7 @@ services:
     ports:
       - "8020:8000"
     environment:
+      # Must match the demo-only database credentials above; change both together.
       DATABASE_URL: postgresql://automotive:automotive@db:5432/automotive_vision
     volumes:
       - ./models:/app/models

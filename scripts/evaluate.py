@@ -130,16 +130,11 @@ def main() -> None:
     thresholds = np.arange(0.3, 1.0, 0.05)
     sweep = threshold_sweep(cal_conf, cal_correct, thresholds)
 
-    # Selection rule (stated explicitly, not claimed optimal): the smallest threshold
-    # for which auto-decided accuracy is >= 0.9 on this held-out test set, so most
-    # predictions are automated while the automated subset stays reliable. With n=35
-    # this is a noisy estimate, not a guarantee.
-    candidate = next(
-        (row for row in sweep if row["auto_decided_accuracy"] is not None and row["auto_decided_accuracy"] >= 0.9),
-        None,
-    )
-    selected_threshold = candidate["threshold"] if candidate else 0.7
-    logger.info(f"Selected review threshold: {selected_threshold} (rule: see scripts/evaluate.py comment)")
+    # No threshold is selected here. The sweep below is descriptive only: choosing a threshold by
+    # looking at the held-out test set would leak it. The review threshold is selected on
+    # out-of-fold validation predictions by scripts/evaluate_review_policy.py (frozen in
+    # reports/metrics/review_policy_frozen.json) before the test set is scored.
+    selected_threshold = None
 
     reports_dir = Path("reports")
     (reports_dir / "metrics").mkdir(parents=True, exist_ok=True)
@@ -155,7 +150,7 @@ def main() -> None:
         "calibrated_reliability_diagram": cal_diagram,
         "threshold_sweep": sweep,
         "selected_review_threshold": selected_threshold,
-        "selection_rule": "smallest threshold with auto-decided accuracy >= 0.9 on held-out test (n=35); falls back to 0.7 if none qualify",
+        "selection_rule": "none: the sweep on the held-out test is descriptive only; see reports/metrics/review_policy_frozen.json for the validation-only selection",
     }
     out_json = reports_dir / "metrics" / "calibration.json"
     out_json.write_text(json.dumps(results, indent=2))

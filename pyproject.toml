@@ -59,6 +59,10 @@ target-version = "py312"
 # B008: FastAPI's Depends() is idiomatically used as an argument default -- not a bug.
 "src/automotive_vision/api/routes.py" = ["B008"]
 
+[tool.mypy]
+python_version = "3.12"
+files = ["src"]
+
 [[tool.mypy.overrides]]
 # These third-party libraries ship no inline type markers (py.typed) or stubs package;
 # ignoring missing imports for just these modules (not project-wide) keeps `mypy src`

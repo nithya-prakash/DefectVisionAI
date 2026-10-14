@@ -20,7 +20,7 @@ from automotive_vision.inference.explainability import (
 from automotive_vision.inference.postprocessing import decide_needs_review
 from automotive_vision.models.anomaly_detector import PatchCoreLite
 from automotive_vision.models.classifier import DefectClassifier
-from automotive_vision.models.uncertainty import softmax_uncertainty
+from automotive_vision.models.uncertainty import apply_temperature, softmax_uncertainty
 from automotive_vision.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -32,6 +32,7 @@ class Predictor:
         self.device = device
         self.dataset_cfg = config["dataset"]
         self.inference_cfg = config["inference"]
+        self.temperature = float(self.inference_cfg.get("temperature", 1.0))
         self.heatmap_dir = Path(heatmap_dir)
         self.heatmap_dir.mkdir(parents=True, exist_ok=True)
 
@@ -68,7 +69,7 @@ class Predictor:
 
         logits = self.model(image_tensor.unsqueeze(0))[0].cpu().numpy()
         result = softmax_uncertainty(
-            logits,
+            apply_temperature(logits, self.temperature),
             self.class_names,
             confidence_threshold=self.inference_cfg["confidence_threshold"],
             entropy_threshold=self.inference_cfg.get("entropy_threshold"),

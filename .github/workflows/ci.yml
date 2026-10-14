@@ -19,13 +19,19 @@ jobs:
       - name: Install CPU-only PyTorch
         # The default Linux wheel pulls the full CUDA toolkit; CI has no GPU and no
         # test touches torch beyond CPU tensor ops, so this keeps the job fast.
-        run: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+        run: pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install project (with dev dependencies)
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev]" -c constraints.txt
+
+      - name: Check dependencies are consistent
+        run: pip check
 
       - name: Lint (ruff)
         run: ruff check src scripts tests
+
+      - name: Type-check (mypy)
+        run: mypy
 
       - name: Run tests
         run: pytest -v

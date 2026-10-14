@@ -28,6 +28,13 @@ mlartifacts/
 # Reports that are regenerated (keep dirs via .gitkeep, ignore contents)
 reports/figures/*.png
 reports/metrics/*.json
+# Small evaluation records the README cites; tracked so the results can be checked (no data or weights).
+!reports/metrics/anomaly_detection.json
+!reports/metrics/supervised_classification.json
+!reports/metrics/calibration.json
+!reports/metrics/active_learning.json
+!reports/metrics/review_policy_frozen.json
+!reports/metrics/review_policy_evaluation.json
 reports/metrics/*.csv
 !reports/figures/.gitkeep
 !reports/metrics/.gitkeep

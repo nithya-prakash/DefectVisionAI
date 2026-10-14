@@ -27,3 +27,22 @@ def clean_tables():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     yield
+
+
+@pytest.fixture
+def offline_resnet(monkeypatch):
+    """Build ResNet18 with random weights so tests never download ImageNet weights.
+
+    The models call torchvision.models.resnet18(weights=...); this makes `weights` a no-op and
+    seeds the random initialisation so results are deterministic.
+    """
+    import torch
+    import torchvision.models as tv_models
+
+    real = tv_models.resnet18
+
+    def _random_init(weights=None, **kwargs):
+        torch.manual_seed(0)
+        return real(weights=None, **kwargs)
+
+    monkeypatch.setattr(tv_models, "resnet18", _random_init)

@@ -233,11 +233,120 @@ def section_calibration(calibration: dict | None) -> list[str]:
             "",
         ]
     lines += [
-        (f"The human-review confidence threshold ({calibration['selected_review_threshold']}, "
-        "see `configs/inference.yaml`) was chosen by this explicit rule, not asserted as "
-        f"optimal: *{calibration['selection_rule']}*. Full threshold sweep in "
-        "`reports/metrics/calibration.json`; reliability diagrams in "
+        ("The sweep in `reports/metrics/calibration.json` is descriptive only: no review "
+        "threshold is selected from the held-out test set. The temperature above is the "
+        "16-image fit; the review threshold and temperature actually used come from "
+        "cross-validated out-of-fold predictions (next section). Reliability diagrams in "
         "`reports/figures/reliability_diagram.png`."),
+        "",
+    ]
+    return lines
+
+
+def _p(*parts: str) -> str:
+    return "".join(parts)
+
+
+def _ci(interval) -> str:
+    return "n/a" if not interval else f"[{interval[0]:.2f}, {interval[1]:.2f}]"
+
+
+def section_review_policy(policy: dict | None) -> list[str]:
+    lines = ["## 8b. Review policy and fair model comparison", ""]
+    if not policy:
+        lines += ["_Not yet run. Run `python scripts/evaluate_review_policy.py validate` then `test`._", ""]
+        return lines
+    frozen, test = policy["frozen"], policy["test"]
+    oof, temp = frozen["pool_oof"], frozen["temperature"]
+    pol = oof["classifier_only_policy"]
+    lines += [
+        _p("**Protocol (frozen before any test image was scored).** Five-fold cross-validation over the "
+        f"{oof['n']}-image labeled pool (the same ResNet18 recipe, trained on 64 and predicting the other 16, "
+        f"fixed {frozen['cv']['epochs_fixed']} epochs so no fold is used for early stopping; these CV models are "
+        "not the deployed checkpoint) gives out-of-fold predictions for every pool image. Temperature is fit "
+        "leave-one-fold-out and adopted only if pooled ECE improves; the review threshold maximises "
+        "auto-decision coverage subject to out-of-fold auto-accuracy >= 0.90. The held-out test images "
+        f"(n={test['test_set']['n']}: {test['test_set']['n_defective']} defective, {test['test_set']['n_good']} good) "
+        "are scored once, with the existing final checkpoint."),
+        "",
+        "| Out-of-fold (validation only) | Value |",
+        "|---|---:|",
+        f"| Classifier accuracy (n={oof['n']}) | {fmt(oof['accuracy'], 3)} {_ci(oof['accuracy_ci95'])} |",
+        f"| ECE raw / leave-one-fold-out temperature | {fmt(temp['ece_raw_oof'], 3)} / {fmt(temp['ece_leave_one_fold_out'], 3)} |",
+        f"| Temperature adopted | {temp['adopted']} (T={fmt(temp['value_used'], 3)}) |",
+        f"| Review threshold ({'validated' if frozen['classifier_policy']['validated'] else 'NOT validated; default'}) | {fmt(frozen['classifier_policy']['threshold'], 2)} |",
+        f"| Review rate / coverage | {fmt(pol['review_rate'], 2)} / {fmt(pol['coverage'], 2)} |",
+        f"| Auto-decided accuracy | {fmt(pol['auto_accuracy'], 3)} {_ci(pol['auto_accuracy_ci95'])} |",
+        "",
+    ]
+    rp = test["review_policy_frozen"]["outcome"]
+    lines += [
+        _p(f"**Review policy on the {test['test_set']['n']} test images** (threshold {fmt(rp['threshold'], 2)}): "
+        f"{rp['n_reviewed']} reviewed (review rate {fmt(rp['review_rate'], 2)}), {rp['n_auto_decided']} auto-decided "
+        f"(coverage {fmt(rp['coverage'], 2)}), auto-decided accuracy {fmt(rp['auto_accuracy'], 3)} "
+        f"{_ci(rp['auto_accuracy_ci95'])}; overall accuracy {fmt(rp['overall_accuracy'], 3)}. With "
+        f"{rp['n_auto_decided']} auto-decided images the interval is wide: this supports 'no auto-decided "
+        "error was observed', not a guaranteed error rate."),
+        "",
+        "### Five-class classification (classifier only; PatchCore does not output classes)",
+        "",
+        "| Class | Precision | Recall [Wilson 95%] | F1 | n |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    five = test["five_class_classifier_only"]
+    for name, m in five["per_class"].items():
+        lines.append(
+            f"| {name} | {fmt(m['precision'], 2)} | {fmt(m['recall'], 2)} {_ci(m['recall_ci95_wilson'])} | "
+            f"{fmt(m['f1'], 2)} | {m['support']} |"
+        )
+    lines += [
+        "",
+        _p(f"Accuracy {fmt(five['accuracy'], 3)} {_ci(five['accuracy_ci95_wilson'])}, macro-F1 {fmt(five['macro_f1'], 3)}. "
+        "With 7 images per class every per-class interval is wide; the weakest class is `bent`."),
+        "",
+        "### Binary defect detection on the same test images (defective vs good)",
+        "",
+        _p("Both models are scored on identical image IDs with the same labels. Different outputs: the "
+        "classifier's score is 1 - P(good) (supervised, trained on labeled defect images from the same "
+        "distribution), PatchCore's is a nearest-neighbour distance learned from normal images only. "
+        "They answer the same yes/no question but are not interchangeable models."),
+        "",
+        "| Model | AUROC [bootstrap 95%] | AUPRC [bootstrap 95%] (base rate) | Defects caught | False alarms |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    b = test["binary_defect_detection_same_images"]
+    for label, key, dec in (
+        ("Classifier (argmax not good)", "classifier", b["classifier_decision_argmax_not_good"]),
+        ("PatchCore-lite (frozen threshold)", "patchcore", b["patchcore_decision_at_frozen_threshold"]),
+    ):
+        a = b[key]
+        lines.append(
+            f"| {label} | {fmt(a['auroc'], 3)} {_ci(a['auroc_ci95_stratified_bootstrap'])} | "
+            f"{fmt(a['auprc'], 3)} {_ci(a['auprc_ci95_stratified_bootstrap'])} ({fmt(a['auprc_of_uninformative_scorer'], 2)}) | "
+            f"{dec['defects_caught']}/{dec['n_defective']} | {dec['good_flagged']}/{dec['n_good']} |"
+        )
+    d = b["auroc_difference_patchcore_minus_classifier_ci95_paired"]
+    lines += [
+        "",
+        _p(f"Paired AUROC difference (PatchCore minus classifier) 95% interval {_ci(d)}: "
+        + ("it includes 0, so 35 images cannot separate the two. " if d[0] <= 0 <= d[1] else "")
+        + "The 115-image PatchCore result in section 5 is a different protocol (the official test set, "
+        "normal-only training) and is not comparable to these numbers."),
+        "",
+        "### Anomaly-score review gate",
+        "",
+    ]
+    g = frozen["anomaly_gate"]
+    ge = test["anomaly_gate"]["evaluated_as_if_enabled"]
+    lines += [
+        _p(f"Evaluated as implemented (anomaly score >= threshold sends the image to review; threshold = "
+        f"{fmt(g['threshold'], 2)}, the 95th percentile of known-good pool images). Enable criterion, written "
+        f"before the test set was scored: {g['enable_criterion']}. On the pool the combined policy sent "
+        f"{fmt(g['pool_combined_policy']['review_rate'], 2)} of images to review, so **the gate stays disabled** "
+        f"(`anomaly_review_threshold: null`). Run as if enabled on the test images it would review "
+        f"{fmt(ge['review_rate'], 2)} of them (flagging {fmt(test['anomaly_gate']['anomaly_flag_rate_good'], 2)} of good and "
+        f"{fmt(test['anomaly_gate']['anomaly_flag_rate_defective'], 2)} of defective images). The anomaly score is "
+        "returned with each prediction (and drives the heatmap) but does not route review."),
         "",
     ]
     return lines
@@ -409,12 +518,15 @@ def section_conclusions(anomaly, classification, calibration, active_learning) -
         "standing in for a reviewer)."),
         "",
         ("**What came back negative or inconclusive, and is reported as such:** temperature "
-        "scaling did not improve calibration here, and no active-learning acquisition "
-        "strategy showed a statistically clear advantage over random sampling."),
+        "scaling fit on the 16-image validation set worsened test ECE (a cross-validated fit on the "
+        "80-image pool improved out-of-fold ECE, section 8b); the anomaly-score review gate is "
+        "disabled because it would review ~95% of images; no active-learning acquisition "
+        "strategy showed a statistically clear advantage over random sampling; and 35 test images "
+        "cannot separate PatchCore from the classifier on defect detection."),
         "",
         ("**What remains future work:** extending to a second MVTec category (`screw`), "
         "periodic full-CNN fine-tuning in the active-learning loop once more labeled data is "
-        "available, cross-validated temperature fitting, and evaluating MC-dropout as a "
+        "available, and evaluating MC-dropout as a "
         "second review-routing signal."),
         "",
     ]
@@ -427,6 +539,7 @@ def main() -> None:
     classification = load("supervised_classification.json")
     calibration = load("calibration.json")
     active_learning = load("active_learning.json")
+    review_policy = load("review_policy_evaluation.json")
 
     lines = [
         "# Evaluation Report",
@@ -445,6 +558,7 @@ def main() -> None:
     lines += section_supervised_classifier(classification)
     lines += section_uncertainty()
     lines += section_calibration(calibration)
+    lines += section_review_policy(review_policy)
     lines += section_active_learning(active_learning)
     lines += section_results(anomaly, classification, calibration, active_learning)
     lines += section_error_analysis(classification)

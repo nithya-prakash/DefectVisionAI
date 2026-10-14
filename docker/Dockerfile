@@ -10,12 +10,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml ./
+COPY pyproject.toml constraints.txt ./
 COPY src ./src
 # CPU-only torch wheels explicitly: the default PyPI linux wheel pulls in the full
 # CUDA toolkit (~1GB+) even though this container never has a GPU.
-RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
-RUN pip install --no-cache-dir -e ".[dev]"
+RUN pip install --no-cache-dir torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir -e ".[dev]" -c constraints.txt
 
 COPY configs ./configs
 COPY scripts ./scripts

@@ -4,11 +4,9 @@ Uploaded images are saved under data/uploads/ by their database id, never by any
 client-supplied filename or path, so responses never leak server filesystem layout.
 """
 
-import io
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
-from PIL import Image as PILImage
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -21,6 +19,11 @@ from automotive_vision.api.schemas import (
     ReviewRequest,
     ReviewResponse,
 )
+from automotive_vision.api.upload_limits import (
+    MAX_BATCH_FILES,
+    read_upload_bounded,
+    validate_image_bytes,
+)
 from automotive_vision.database import repository
 from automotive_vision.database.models import Prediction, Review
 from automotive_vision.inference.predictor import Predictor
@@ -28,27 +31,16 @@ from automotive_vision.inference.predictor import Predictor
 router = APIRouter()
 
 UPLOAD_DIR = Path("data/uploads")
-ALLOWED_CONTENT_TYPES = {"image/png", "image/jpeg", "image/bmp"}
-MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
 
-def _validate_and_read(upload: UploadFile, contents: bytes) -> None:
-    if upload.content_type not in ALLOWED_CONTENT_TYPES:
-        raise HTTPException(status_code=415, detail=f"Unsupported content type: {upload.content_type}")
-    if len(contents) > MAX_UPLOAD_BYTES:
-        raise HTTPException(status_code=413, detail="Image exceeds 10MB limit")
-    try:
-        PILImage.open(io.BytesIO(contents)).verify()
-    except Exception as exc:
-        raise HTTPException(status_code=400, detail="Uploaded file is not a valid image") from exc
-
-
-def _persist_and_predict(upload: UploadFile, contents: bytes, db: Session, predictor: Predictor) -> PredictionResponse:
+def _persist_and_predict(
+    contents: bytes, extension: str, db: Session, predictor: Predictor
+) -> PredictionResponse:
     result = predictor.predict(contents)
 
     image_record = repository.create_image(db, path="")  # path filled in after we know the id
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-    image_path = UPLOAD_DIR / f"{image_record.id}.png"
+    image_path = UPLOAD_DIR / f"{image_record.id}.{extension}"
     image_path.write_bytes(contents)
     image_record.path = str(image_path)
     db.commit()
@@ -86,9 +78,9 @@ async def predict(
     db: Session = Depends(get_db),
     predictor: Predictor = Depends(get_predictor),
 ) -> PredictionResponse:
-    contents = await file.read()
-    _validate_and_read(file, contents)
-    return _persist_and_predict(file, contents, db, predictor)
+    contents = await read_upload_bounded(file)
+    extension = validate_image_bytes(contents)  # from the bytes, never the declared type
+    return _persist_and_predict(contents, extension, db, predictor)
 
 
 @router.post("/predict/batch", response_model=BatchPredictionResponse)
@@ -97,11 +89,18 @@ async def predict_batch(
     db: Session = Depends(get_db),
     predictor: Predictor = Depends(get_predictor),
 ) -> BatchPredictionResponse:
-    responses = []
+    if len(files) > MAX_BATCH_FILES:
+        raise HTTPException(
+            status_code=413, detail=f"Too many files in one request (max {MAX_BATCH_FILES})"
+        )
+    # Validate every file first, so one bad file cannot leave earlier files half-processed.
+    validated = []
     for file in files:
-        contents = await file.read()
-        _validate_and_read(file, contents)
-        responses.append(_persist_and_predict(file, contents, db, predictor))
+        contents = await read_upload_bounded(file)
+        validated.append((contents, validate_image_bytes(contents)))
+    responses = [
+        _persist_and_predict(contents, extension, db, predictor) for contents, extension in validated
+    ]
     return BatchPredictionResponse(results=responses)
 
 

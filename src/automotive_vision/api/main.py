@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from automotive_vision.api.routes import router
+from automotive_vision.api.upload_limits import RequestSizeLimitMiddleware
 from automotive_vision.database.session import init_db
 
 
@@ -24,4 +25,5 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+app.add_middleware(RequestSizeLimitMiddleware)
 app.include_router(router)

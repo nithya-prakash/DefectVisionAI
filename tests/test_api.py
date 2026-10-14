@@ -46,11 +46,12 @@ def test_predict_returns_structured_prediction(client):
     assert 0 <= body["confidence"] <= 1
 
 
-def test_predict_rejects_non_image_content_type(client):
+def test_predict_rejects_non_image_payload_whatever_the_declared_type(client):
+    """The payload is validated, not the client-supplied Content-Type (see api/upload_limits.py)."""
     response = client.post(
         "/predict", files={"file": ("test.txt", b"not an image", "text/plain")}
     )
-    assert response.status_code == 415
+    assert response.status_code == 400
 
 
 def test_predict_rejects_corrupt_image_bytes(client):
