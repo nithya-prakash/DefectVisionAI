@@ -59,3 +59,12 @@ data/uploads/
 data/heatmaps/
 *.db
 *.db-journal
+
+# YOLO detection experiment (detection/)
+detection/.venv/
+detection/data/
+detection/runs/
+detection/*.pt
+
+# The small trained detector is tracked on purpose so the demo runs from a clone
+!detection/weights/yolov8n_welding.pt

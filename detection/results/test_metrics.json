@@ -1,0 +1,70 @@
+{
+  "device": "mps",
+  "leakage_min_distance_bits": 10,
+  "full_test": {
+    "images": 126,
+    "boxes": 301,
+    "ultralytics": {
+      "mAP50": 0.587751335021767,
+      "mAP50_95": 0.3532068193010012,
+      "precision": 0.5234101403192736,
+      "recall": 0.6280612709339942,
+      "per_class_AP50": {
+        "Bad Weld": 0.8336526605266761,
+        "Good Weld": 0.674619641652005,
+        "Defect": 0.25498170288662
+      },
+      "per_class_AP50_95": {
+        "Bad Weld": 0.529371551589277,
+        "Good Weld": 0.41599172484316993,
+        "Defect": 0.11425718147055633
+      }
+    },
+    "independent_AP50": {
+      "Bad Weld": 0.7229742437527797,
+      "Good Weld": 0.6599124673749129,
+      "Defect": 0.2648051205168522,
+      "mean": 0.5492306105481817
+    },
+    "prior_box_baseline_AP50": {
+      "Bad Weld": 0.0012303485987696515,
+      "Good Weld": 0.0,
+      "Defect": 0.0,
+      "mean": 0.0004101161995898838
+    },
+    "mean_latency_ms": 24.55817918240745
+  },
+  "leakage_reduced_test": {
+    "images": 71,
+    "boxes": 210,
+    "ultralytics": {
+      "mAP50": 0.5811540542900893,
+      "mAP50_95": 0.3221117144340991,
+      "precision": 0.5068921295553436,
+      "recall": 0.6501423501423501,
+      "per_class_AP50": {
+        "Bad Weld": 0.816342911794715,
+        "Good Weld": 0.56926177186392,
+        "Defect": 0.35785747921163286
+      },
+      "per_class_AP50_95": {
+        "Bad Weld": 0.4823921517993588,
+        "Good Weld": 0.32478518976744186,
+        "Defect": 0.1591578017354963
+      }
+    },
+    "independent_AP50": {
+      "Bad Weld": 0.6657981759992518,
+      "Good Weld": 0.5633663622430156,
+      "Defect": 0.3762362786034665,
+      "mean": 0.5351336056152447
+    },
+    "prior_box_baseline_AP50": {
+      "Bad Weld": 0.0013289036544850497,
+      "Good Weld": 0.0,
+      "Defect": 0.0,
+      "mean": 0.0004429678848283499
+    },
+    "mean_latency_ms": 22.51139737973703
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "splits": {
+    "train": {
+      "images": 1619,
+      "boxes": 4583,
+      "classes": {
+        "Defect": 1598,
+        "Good Weld": 1896,
+        "Bad Weld": 1089
+      },
+      "problems": [],
+      "n_problems": 0
+    },
+    "valid": {
+      "images": 283,
+      "boxes": 802,
+      "classes": {
+        "Defect": 273,
+        "Bad Weld": 194,
+        "Good Weld": 335
+      },
+      "problems": [],
+      "n_problems": 0
+    },
+    "test": {
+      "images": 126,
+      "boxes": 301,
+      "classes": {
+        "Defect": 89,
+        "Good Weld": 117,
+        "Bad Weld": 95
+      },
+      "problems": [],
+      "n_problems": 0
+    }
+  },
+  "sources_total": 1315,
+  "sources_in_multiple_splits": 1,
+  "test_images_with_source_in_train": 1
+}
